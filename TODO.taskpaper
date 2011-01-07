@@ -1,0 +1,55 @@
+Lovers 2.0:
+	Spread the Love.
+	Send Love to friends. Add friends as lovers.
+	Launch on February 1, 2011.
+
+	The application is currently written in FBML & PHP. The goal is to rewrite the application with the Facebook JavaScript SDK (front end) and Ruby (Sinatra) & Redis (back end). We'll  host on AWS or Heroku with Redis To Go. We'll reuse and improve upon many of the already existing FBML, CSS, images (e.g., the logo), and content.
+
+	Team
+		Matt Di Pasquale - Lead Developer
+		Peng - Developer
+		Jakob - Developer
+
+	@improve: completed for Lovers 1.0 but should be updated & improved for 2.0
+
+	Develop Team:
+		- Post details on Elance, NYU, Yale
+		- Email Harvard lists, Wires, and Ruby lists
+
+	Meta Pages:
+		About: @improve
+			- Add descriptions of new features and update screenshots
+		FAQ: @improve
+		Privacy Policy: @improve
+			- Address new, pertinent features: MongoDB storage, email collection, FB Credits, etc.
+		Company Site - LoversApp.com:
+			- Something like Google Chrome, TaskPaper, or Urtak's homepages
+
+	App Features:
+		AJAX Navigation:
+			- The whole app should load initially; each tabbed page should be a <section>.
+		Profile Page: @improve
+			- Add Photo & links on left like normal profile
+			- Add box to show some lovers
+		Add Lovers: @improve
+			- Request & Approve model
+			- Add multiple friends as lovers with the different relationship statuses that Facebook offers
+			- Post newsfeed stories when people become lovers and when they breakup
+			- Email user on request & acceptance
+		Leaderboard:
+			- Top Lovers & Most Loved
+		Add a Valentine:
+			- Request & Approve model
+			- Add a friend as a Valentine: you can only have one
+			- Post newsfeed stories when people become Valentines
+			- Email user on request & acceptance
+		Monetization:
+			- Add options to send gift on send love form and when adding Valentines/Lovers
+				- Hook up PayPal & Google Checkout
+				- Facebook Credits? Gifts? API
+					- email danny@facebook.com
+
+	Marketing:
+		- Post love to friends & families walls; add Lovers & Valentines
+		- Ask friends & family to post love to their friends walls & add Lovers & Valentines
+		- Hire people to send love & requests to their friends: $0.50/friend? Outsource it?
