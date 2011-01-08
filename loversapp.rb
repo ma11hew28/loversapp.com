@@ -1,7 +1,9 @@
 ###############################################################################
-# Constants ###################################################################
+# Configure ###################################################################
 ###############################################################################
-PERR = "x" # params validation error
+
+require './conf.rb' # set Facebook constants, etc.
+require 'erb'       # use Erb templates
 
 configure :development do
   require 'ruby-debug'
@@ -15,10 +17,34 @@ end
 
 before { content_type 'application/json' }
 
+
+###############################################################################
+# Models ######################################################################
+###############################################################################
+
+class Facebook
+  attr_accessor :user_id, :access_token, :signed_request
+
+  # http://developers.facebook.com/docs/authentication/canvas
+  # Initialize the user state from a signed_request.
+  def initialize(signed_request)
+    return if signed_request.nil?
+    encoded_signature, encoded_data = signed_request.split('.')
+    signature = base64_url_decode(encoded_signature)
+    expected_signature = HMAC::SHA256.digest(FB_APP_SECRET, encoded_data)
+    if signature == expected_signature
+      self.signed_request = JSON.parse base64_url_decode(encoded_data)
+      self.user_id = self.signed_request["user_id"]
+      self.access_token = self.signed_request["oauth_token"]
+    end
+  end
+end
+
 get '/' do
   content_type 'text/html'
-  'Hello world!'
+  "Hello world!"
 end
+
 
 ###############################################################################
 # Canvas ######################################################################
@@ -31,9 +57,11 @@ get '/fb/canvas/' do
   erb :main
 end
 
+# Initial Facebook request comes in as a POST with a signed_request.
 post '/fb/canvas/' do
   content_type 'text/html'
-  "post response"
+  fb = Facebook.new(params[:signed_request])
+  erb :main
 end
 
 ###############################################################################
@@ -157,6 +185,17 @@ end
 def valid_int?(str)
   Integer(uid)
 end
+
+# https://github.com/ptarjan/base64url/blob/master/ruby.rb
+def base64_url_decode(str)
+  str += '=' * (4 - (short = str.size.modulo(4))) unless short == 0
+  Base64.decode64(str.tr('-_', '+/'))
+end
+
+# @staticmethod
+# def base64_url_encode(data):
+#     return base64.urlsafe_b64encode(data).rstrip('=')
+
 
 # Cool projects
 # mechanical turk

@@ -1,0 +1,8 @@
+FB_APP_ID = 'YOUR APP ID'
+FB_APP_SECRET = 'YOUR APP SECRET'
+FB_CANVAS_NAME = 'runwithfriends'
+FB_CANVAS_URL = 'http://runwithfriends.appspot.com/'
+
+PERR = "x" # params validation error
+
+ADMIN_UIDS = ['5526183']
