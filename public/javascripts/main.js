@@ -11,14 +11,6 @@ document.createElement("time");
 document.createElement("button");
 
 
-/**
- * @namespace LVRS public namespace for Lovers
- */
-LVRS = window.LVRS || {};
-
-LVRS.config = {
-  appId: 120027745430
-}
 
 function facebookInit(config) {
   Config = config;
@@ -80,3 +72,5 @@ function publishRun(title) {
     user_message_prompt: 'Tell your friends about the run:'
   });
 }
+
+//$(window).trigger("LVRS_LOAD");
