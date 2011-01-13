@@ -110,6 +110,8 @@ end
 
 # POST (add) a request from one user (uid) to another (tid)
 post '/fb/canvas/reqs' do
+  # fb.user.request(validate_params(params[:rel], params[:tid]))
+
   # Validate that uid, tid, rel are integers and rel is btw 0 to NUM_RELS.
   uid, tid, rel = params[:uid], params[:tid], params[:rel] # get uid from FB
   return PERR unless valid_rel?(rel)
@@ -120,12 +122,12 @@ post '/fb/canvas/reqs' do
   REDIS.zrem(tid+':reqSent', urel) # not shown but may in future
   if REDIS.zrem(uid+':reqRecv', trel)
     return REDIS.sadd(uid+':rels', trel) && REDIS.sadd(tid+':rels', urel) ?
-        "r" : "e"
+        "q" : "l"
   end
 
   # If this relation already exists, return w/ feedback code.
   if REDIS.sismember(uid+':rels', trel) && REDIS.sismember(tid+':rels', urel)
-    return "e"
+    return "l"
 
   # Add the request.
   now = Time.now.to_i
