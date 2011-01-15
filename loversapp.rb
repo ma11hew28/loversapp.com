@@ -7,12 +7,6 @@ require 'erb'       # use Erb templates
 
 configure :development do
   require 'ruby-debug'
-  REDIS = Redis.new
-end
-
-configure :production do
-  uri = URI.parse(ENV["REDISTOGO_URL"])
-  REDIS = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
 end
 
 before { content_type 'application/json' }
@@ -21,24 +15,6 @@ before { content_type 'application/json' }
 ###############################################################################
 # Models ######################################################################
 ###############################################################################
-
-class Facebook
-  attr_accessor :user_id, :access_token, :signed_request
-
-  # http://developers.facebook.com/docs/authentication/canvas
-  # Initialize the user state from a signed_request.
-  def initialize(signed_request)
-    return if signed_request.nil?
-    encoded_signature, encoded_data = signed_request.split('.')
-    signature = base64_url_decode(encoded_signature)
-    expected_signature = HMAC::SHA256.digest(FB_APP_SECRET, encoded_data)
-    if signature == expected_signature
-      self.signed_request = JSON.parse base64_url_decode(encoded_data)
-      self.user_id = self.signed_request["user_id"]
-      self.access_token = self.signed_request["oauth_token"]
-    end
-  end
-end
 
 get '/' do
   content_type 'text/html'
@@ -199,12 +175,6 @@ end
 
 def valid_int?(str)
   Integer(uid)
-end
-
-# https://github.com/ptarjan/base64url/blob/master/ruby.rb
-def base64_url_decode(str)
-  str += '=' * (4 - (short = str.size.modulo(4))) unless short == 0
-  Base64.decode64(str.tr('-_', '+/'))
 end
 
 # @staticmethod
