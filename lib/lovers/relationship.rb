@@ -1,6 +1,7 @@
 module Lovers
-  class Request
+  class Relationship
     SET_KEY = name.split('::').last.uncapitalize.pluralize
+
     # attr_accessor :rid, :uid, :tid # relationship_id, user_id, target_id
 
     def initialize(rid, uid, tid)
@@ -14,9 +15,8 @@ module Lovers
     # Save the request to Redis.
     # requestsSent are never shown, but we may show them in the future.
     def save
-      now = Time.now.to_i
-      Lovers.redis.zadd("#{@uid}:#{SET_KEY}Sent", now, @rid+'|'+@tid)
-      Lovers.redis.zadd("#{@tid}:#{SET_KEY}Received", now, @rid+'|'+@uid)
+      Lovers.redis.sadd(@uid+':'+SET_KEY, @rid+'|'+@tid) &&
+      Lovers.redis.sadd(@tid+':'+SET_KEY, @rid+'|'+@uid)
     end
   end
 end

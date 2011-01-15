@@ -1,13 +1,6 @@
 module Lovers
   class User
-    attr_reader :fb_id, :access_token #, :locale, :signed_request, etc.
-    attr_accessor :sent_reqs, :recv_reqs, :hidn_reqs
-
-    def initialize
-      self.sent_reqs = []
-      self.recv_reqs = []
-      self.hidn_reqs = []
-    end
+    attr_reader :fb_id #, :access_token, :locale, :signed_request #, etc.
 
     # http://developers.facebook.com/docs/authentication/canvas
     # Initialize the user state from a signed_request.
@@ -19,7 +12,7 @@ module Lovers
       if signature == expected_signature
         signed_request = JSON.parse base64_url_decode(encoded_data)
         @fb_id = signed_request["user_id"]
-        @access_token = signed_request["oauth_token"]
+        # @access_token = signed_request["oauth_token"]
       end
     end
 

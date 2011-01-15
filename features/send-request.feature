@@ -8,13 +8,13 @@ Feature: user sends request
     Given I'm logged in
     And I've sent the following requests:
       | rid | uid |
-      | 3   | 10 |
+      | 3   | 10  |
     And I've received the following requests:
       | rid | uid |
-      | 2   | 12 |
+      | 2   | 12  |
     And I'm in the following relationships:
       | rid | uid |
-      | 4   | 11 |
+      | 4   | 11  |
 
   # TODO: Get FB's feedback msgs. Add FB's block condition.
 
