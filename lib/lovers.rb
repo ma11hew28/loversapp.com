@@ -17,8 +17,7 @@ end
 
 require 'lovers/conf' # set Facebook constants, etc.
 require 'lovers/user'
-require 'lovers/request'
-require 'lovers/relationship'
+require 'lovers/rel'
 
 module Lovers
   class << self

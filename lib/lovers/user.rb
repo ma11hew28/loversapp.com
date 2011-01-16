@@ -16,9 +16,27 @@ module Lovers
       end
     end
 
-    def send_request(rid, uid)
+    def send_req(rid, uid)
+      rel = Rel.new(rid, fb_id, uid)
 
-      # sent_reqs << Request.new(rid, uid)
+      # If target already made this request, delete it and confirm relationship.
+      return rel.save_rel ? "2" : "3" if rel.delete_inverse
+
+      return "3" if rel.rel_exists?
+
+      rel.save_req ? "1" : "0"
+    end
+
+    def reqs_sent
+      Lovers.redis.zrange(fb_id+':'+Rel::SENT, 0, -1)
+    end
+
+    def reqs_recv
+      Lovers.redis.zrange(fb_id+':'+Rel::RECV, 0, -1)
+    end
+
+    def rels
+      Lovers.redis.smembers(fb_id+':'+Rel::RELS)
     end
 
     private

@@ -2,12 +2,14 @@
 # Configure ###################################################################
 ###############################################################################
 
-require './conf.rb' # set Facebook constants, etc.
-require 'erb'       # use Erb templates
+require './lib/lovers.rb'
+require 'erb' # use Erb templates
 
 configure :development do
   require 'ruby-debug'
 end
+
+enable :sessions
 
 before { content_type 'application/json' }
 
@@ -36,12 +38,9 @@ end
 # Initial Facebook request comes in as a POST with a signed_request.
 post '/fb/canvas/' do
   content_type 'text/html'
-  fb = Facebook.new(params[:signed_request])
-  uid = fb.user_id
-  @user = {
-    :reqs => REDIS.zrange(uid+':reqRecv', 0, -1),
-    :rels => REDIS.smembers(uid+':rels')
-  }
+  user = Lovers::User.new
+  user.login(params[:signed_request])
+  @rels = {:reqs => user.reqs_recv, :rels => user.reqs_sent}
   erb :main
 end
 
@@ -78,49 +77,35 @@ NUM_RELS = REL.size
 
 # GET (show) all requests for a user.
 get '/fb/canvas/reqs' do
-  # Validate that uid is an integer.
-  uid = params[:uid] || "1" # get uid from FB
-  return PERR unless (Integer(uid) rescue false)
-  REDIS.zrange(uid+':reqRecv', 0, -1).inspect
+  @user = Lovers::User.new
+  @user.login(params[:signed_request])
+  @user.reqs_recv.inspect
 end
 
 # POST (add) a request from one user (uid) to another (tid)
 post '/fb/canvas/reqs' do
-  # fb.user.request(validate_params(params[:rel], params[:tid]))
+  # fb.user.request(validate_params(params[:rid], params[:tid]))
 
-  # Validate that uid, tid, rel are integers and rel is btw 0 to NUM_RELS.
-  uid, tid, rel = params[:uid], params[:tid], params[:rel] # get uid from FB
-  return PERR unless valid_rel?(rel)
+  # Validate that uid, tid, rid are integers and rid is btw 0 to NUM_RELS.
+  tid, rid = params[:tid], params[:rid]
+  return PERR unless valid_rel?(rid)
   return PERR unless (Integer(uid) && Integer(tid) && uid != tid rescue false)
 
-  # If target already made this request, remove it and confirm relationship.
-  urel, trel = rel+'|'+uid, rel+'|'+tid
-  REDIS.zrem(tid+':reqSent', urel) # not shown but may in future
-  if REDIS.zrem(uid+':reqRecv', trel)
-    return REDIS.sadd(uid+':rels', trel) && REDIS.sadd(tid+':rels', urel) ?
-        "q" : "l"
-  end
-
-  # If this relation already exists, return w/ feedback code.
-  if REDIS.sismember(uid+':rels', trel) && REDIS.sismember(tid+':rels', urel)
-    return "l"
-
-  # Add the request.
-  now = Time.now.to_i
-  REDIS.zadd(uid+':reqSent', now, trel) # not shown but may in future
-  REDIS.zadd(tid+':reqRecv', now, urel) ? "1" : "0"
+  user = Lovers::User.new
+  user.login(session[:u])
+  user.send_req(rid, tid)
 end
 
 # DELETE (ignore) a request.
 delete '/fb/canvas/reqs' do
-  # Validate that uid, tid, rel are integers and rel is btw 0 to NUM_RELS.
-  uid, tid, rel = params[:uid], params[:tid], params[:rel] # get uid from FB
-  return PERR unless valid_rel?(rel)
+  # Validate that uid, tid, rid are integers and rid is btw 0 to NUM_RELS.
+  tid, rid = params[:tid], params[:rid]
+  return PERR unless valid_rel?(rid)
   return PERR unless (Integer(uid) && Integer(tid) && uid != tid rescue false)
 
   # Remove the request.
-  REDIS.zrem(tid+':reqSent', rel+'|'+uid) # not shown but may in future
-  REDIS.zrem(uid+':reqRecv', rel+'|'+tid) ? "1" : "0"
+  REDIS.zrem(tid+':reqSent', rid+'|'+uid) # not shown but may in future
+  REDIS.zrem(uid+':reqRecv', rid+'|'+tid) ? "1" : "0"
 end
 
 
@@ -138,13 +123,13 @@ end
 
 # POST (confirm/add) a relationship between two users.
 post '/fb/canvas/rels' do
-  # Validate that uid, tid, rel are integers and rel is btw 0 to NUM_RELS.
-  uid, tid, rel = params[:uid], params[:tid], params[:rel] # get uid from FB
-  return PERR unless valid_rel?(rel)
+  # Validate that uid, tid, rid are integers and rid is btw 0 to NUM_RELS.
+  uid, tid, rid = params[:uid], params[:tid], params[:rid] # get uid from FB
+  return PERR unless valid_rel?(rid)
   return PERR unless (Integer(uid) && Integer(tid) && uid != tid rescue false)
 
   # Remove the request, and add the relationship.
-  urel, trel = rel+'|'+uid, rel+'|'+tid
+  urel, trel = rid+'|'+uid, rid+'|'+tid
   REDIS.zrem(tid+':reqSent', urel) # not shown but may in future
   if REDIS.zrem(uid+':reqRecv', trel)
     REDIS.sadd(uid+':rels', trel) && REDIS.sadd(tid+':rels', urel) ? "1" : "0"
@@ -154,13 +139,13 @@ end
 # DELETE (break up) a relationship.
 delete '/fb/canvas/rels' do
   # Validate that uid, tid, rel are integers and rel is btw 0 to NUM_RELS.
-  uid, tid, rel = params[:uid], params[:tid], params[:rel] # get uid from FB
-  return PERR unless valid_rel?(rel)
+  uid, tid, rid = params[:uid], params[:tid], params[:rid] # get uid from FB
+  return PERR unless valid_rel?(rid)
   return PERR unless (Integer(uid) && Integer(tid) && uid != tid rescue false)
 
   # Remove the relationship.
-  REDIS.srem(uid+':rels', rel+'|'+tid) ||
-  REDIS.srem(tid+':rels', rel+'|'+uid) ? "1" : "0"
+  REDIS.srem(uid+':rels', rid+'|'+tid) ||
+  REDIS.srem(tid+':rels', rid+'|'+uid) ? "1" : "0"
 end
 
 
@@ -168,9 +153,9 @@ end
 # Utility Methods #############################################################
 ###############################################################################
 
-def valid_rel?(rel)
-  rel = Integer(rel) rescue (return false)
-  return NUM_RELS > rel && rel > 0
+def valid_rel?(rid)
+  rid = Integer(rid) rescue (return false)
+  return NUM_RELS > rid && rid > 0
 end
 
 def valid_int?(str)

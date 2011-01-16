@@ -20,23 +20,23 @@ Feature: user sends request
 
   Scenario: successful request
     When I send a "0" request to user "14"
-    Then this request should exist
+    Then I should have "2" sent requests
     And the response code should be "1"
 
   Scenario: request already sent
     When I send a "3" request to user "10"
-    Then this request should exist
+    Then I should have "1" sent requests
     And the response code should be "0"
 
   Scenario: request already received
     When I send a "2" request to user "12"
-    Then this request should not exist
-    And this relationship should exist
+    Then I should have "0" received requests
+    And I should have "2" relationships
     And the response code should be "2"
 
   Scenario: relationship already exists
     When I send a "4" request to user "11"
-    Then this request should not exist
+    Then I should have "1" sent requests
     And the response code should be "3"
 
   # # TODO: How do we generalize this for all features?

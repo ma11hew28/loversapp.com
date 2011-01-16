@@ -7,37 +7,38 @@ Given /^I'm logged in$/ do
 end
 
 Given /^I've sent the following requests:$/ do |table|
-  table.hashes.each { |r| @user.send_request(r[:rid], r[:uid]) }
+  table.hashes.each { |r| @user.send_req(r[:rid], r[:uid]) }
 end
 
 Given /^I've received the following requests:$/ do |table|
   table.hashes.each do |r|
-    Lovers::Request.create(r[:rid], r[:uid], @user.fb_id)
+    Lovers::Rel.new(r[:rid], r[:uid], @user.fb_id).save_req
   end
 end
 
 Given /^I'm in the following relationships:$/ do |table|
   table.hashes.each do |r|
-    Lovers::Relationship.create(r[:rid], @user.fb_id, r[:uid])
+    Lovers::Rel.new(r[:rid], @user.fb_id, r[:uid]).save_rel
   end
 end
 
-When /^I send a "(\d+)" request to user "(\d+)"$/ do |arg1, arg2|
-  pending # express the regexp above with the code you wish you had
+When /^I send a "(\d+)" request to user "(\d+)"$/ do |rid, uid|
+  @code = @user.send_req(rid, uid)
 end
 
-Then /^this request should exist$/ do
-  pending # express the regexp above with the code you wish you had
+Then /^I should have "(\d+)" sent requests$/ do |num|
+  @user.reqs_sent.count.should == num.to_i
 end
 
-Then /^the response code should be "([^"]*)"$/ do |arg1|
-  pending # express the regexp above with the code you wish you had
+Then /^I should have "(\d+)" received requests$/ do |num|
+  @user.reqs_recv.count.should == num.to_i
 end
 
-Then /^this request should not exist$/ do
-  pending # express the regexp above with the code you wish you had
+Then /^I should have "([^"]*)" relationships$/ do |num|
+  @user.rels.count.should == num.to_i
 end
 
-Then /^this relationship should exist$/ do
-  pending # express the regexp above with the code you wish you had
+Then /^the response code should be "(\d+)"$/ do |code|
+  @code.should == code
 end
+
