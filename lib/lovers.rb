@@ -25,6 +25,10 @@ module Lovers
       @@redis ||= if ENV["RACK_ENV"] == "production"
         uri = URI.parse(ENV["REDISTOGO_URL"])
         Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
+      elsif ENV["RACK_ENV"] == "cucumber"
+        Redis.new(:port => 6398)
+      elsif ENV["RACK_ENV"] == "test"
+        Redis.new(:port => 6397)
       else
         Redis.new
       end
