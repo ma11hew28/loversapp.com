@@ -1,5 +1,9 @@
 .DS_Store
 .localized
 Thumbs.db
-
+*.swp
+*~
 conf.rb
+.bundle
+.dropbox
+tmp
