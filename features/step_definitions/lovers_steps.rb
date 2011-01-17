@@ -12,13 +12,13 @@ end
 
 Given /^I've received the following requests:$/ do |table|
   table.hashes.each do |r|
-    Lovers::Rel.new(r[:rid], r[:uid], @user.fb_id).save_req
+    Lovers::Rel.new(r[:rid], r[:uid], @user.fb_id).add_req
   end
 end
 
 Given /^I'm in the following relationships:$/ do |table|
   table.hashes.each do |r|
-    Lovers::Rel.new(r[:rid], @user.fb_id, r[:uid]).save_rel
+    Lovers::Rel.new(r[:rid], @user.fb_id, r[:uid]).add_rel
   end
 end
 
@@ -26,15 +26,19 @@ When /^I send a "(\d+)" request to user "(\d+)"$/ do |rid, uid|
   @code = @user.send_req(rid, uid)
 end
 
-Then /^I should have "(\d+)" sent requests$/ do |num|
+When /^I confirm a "(\d+)" request from user "(\d+)"$/ do |rid, uid|
+  @code = @user.conf_req(rid, uid)
+end
+
+Then /^I should have "(\d+)" sent requests?$/ do |num|
   @user.reqs_sent.count.should == num.to_i
 end
 
-Then /^I should have "(\d+)" received requests$/ do |num|
+Then /^I should have "(\d+)" received requests?$/ do |num|
   @user.reqs_recv.count.should == num.to_i
 end
 
-Then /^I should have "([^"]*)" relationships$/ do |num|
+Then /^I should have "(\d+)" relationships?$/ do |num|
   @user.rels.count.should == num.to_i
 end
 

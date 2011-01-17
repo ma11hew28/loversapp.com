@@ -14,17 +14,26 @@ module Lovers
         @fb_id = signed_request["user_id"]
         # @access_token = signed_request["oauth_token"]
       end
+      self
     end
 
     def send_req(rid, uid)
       rel = Rel.new(rid, fb_id, uid)
 
-      # If target already made this request, delete it and confirm relationship.
-      return rel.save_rel ? "2" : "3" if rel.delete_inverse
+      # If inverse request exists, delete it and confirm relationship.
+      return rel.add_rel ? "2" : "3" if rel.rem_inv
 
       return "3" if rel.rel_exists?
 
-      rel.save_req ? "1" : "0"
+      rel.add_req ? "1" : "0"
+    end
+
+    def conf_req(rid, uid)
+      rel = Rel.new(rid, fb_id, uid)
+
+      return rel.add_rel ? "1" : "2" if rel.rem_req
+
+      return rel.rel_exists? ? "2" : "0"
     end
 
     def reqs_sent

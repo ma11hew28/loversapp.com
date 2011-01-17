@@ -38,8 +38,7 @@ end
 # Initial Facebook request comes in as a POST with a signed_request.
 post '/fb/canvas/' do
   content_type 'text/html'
-  user = Lovers::User.new
-  user.login(params[:signed_request])
+  user = Lovers::User.new.login(params[:signed_request])
   @rels = {:reqs => user.reqs_recv, :rels => user.reqs_sent}
   erb :main
 end

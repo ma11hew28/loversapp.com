@@ -26,24 +26,30 @@ module Lovers
     #   self.new(rid, uid, tid).tap { |r| r.save_rel }
     # end
 
-    def save_req
+    def add_req
       now = Time.now.to_i
       Lovers.redis.zadd(@uid+":"+SENT, now, @rid+"|"+@tid)
       Lovers.redis.zadd(@tid+":"+RECV, now, @rid+"|"+@uid)
     end
 
-    def save_rel
+    def add_rel
       Lovers.redis.sadd(@uid+':'+RELS, @rid+'|'+@tid) &&
       Lovers.redis.sadd(@tid+':'+RELS, @rid+'|'+@uid)
     end
 
-    def delete
-
+    def rem_req
+      Lovers.redis.zrem(@tid+":"+SENT, @rid+"|"+@uid)
+      Lovers.redis.zrem(@uid+":"+RECV, @rid+"|"+@tid)      
     end
 
-    def delete_inverse
+    def rem_inv # remove inverse request
       Lovers.redis.zrem(@tid+":"+SENT, @rid+"|"+@uid)
       Lovers.redis.zrem(@uid+":"+RECV, @rid+"|"+@tid)
+    end
+
+    def rem_rel
+      Lovers.redis.srem(@uid+':'+RELS, @rid+'|'+@tid) &&
+      Lovers.redis.srem(@tid+':'+RELS, @rid+'|'+@uid)
     end
 
     def rel_exists?
