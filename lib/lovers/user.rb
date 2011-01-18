@@ -21,7 +21,7 @@ module Lovers
       rel = Rel.new(rid, fb_id, tid)
 
       # If inverse request exists, delete it and confirm relationship.
-      return rel.add_rel ? "2" : "3" if rel.rem_inv
+      return rel.add_rel ? "2" : "3" if rel.rem_req_inv || rel.rem_hid_inv
 
       return "3" if rel.rel_exists?
 

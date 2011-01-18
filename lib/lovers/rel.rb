@@ -10,6 +10,8 @@ module Lovers
 
     def initialize(rid, uid, tid)
       @rid, @uid, @tid = rid, uid, tid
+      @rp, @uc, @tc = @rid+"|", @uid+":", @tid+":"
+      @rpu, @rpt = @rp+@uid, @rp+@tid
     end
 
     # def reverse
@@ -29,45 +31,49 @@ module Lovers
 
     def add_req
       now = Time.now.to_i
-      Lovers.redis.zadd(@uid+":"+SENT, now, @rid+"|"+@tid)
-      Lovers.redis.zadd(@tid+":"+RECV, now, @rid+"|"+@uid)
+      Lovers.redis.zadd(@uc+SENT, now, @rid+"|"+@tid)
+      Lovers.redis.zadd(@tc+RECV, now, @rid+"|"+@uid)
     end
 
     def add_hid
-      Lovers.redis.zadd(@tid+":"+HIDN, Time.now.to_i, @rid+"|"+@uid)
+      Lovers.redis.zadd(@tc+HIDN, Time.now.to_i, @rid+"|"+@uid)
     end
 
     def add_rel
-      Lovers.redis.sadd(@uid+':'+RELS, @rid+'|'+@tid) &&
-      Lovers.redis.sadd(@tid+':'+RELS, @rid+'|'+@uid)
+      Lovers.redis.sadd(@uc+RELS, @rpt) &&
+      Lovers.redis.sadd(@tc+RELS, @rpu)
     end
 
     def rem_req
-      Lovers.redis.zrem(@uid+":"+SENT, @rid+"|"+@tid)
-      Lovers.redis.zrem(@tid+":"+RECV, @rid+"|"+@uid)      
+      Lovers.redis.zrem(@uc+SENT, @rpt)
+      Lovers.redis.zrem(@tc+RECV, @rpu)
     end
 
-    def rem_inv # remove inverse request
-      Lovers.redis.zrem(@tid+":"+SENT, @rid+"|"+@uid)
-      Lovers.redis.zrem(@uid+":"+RECV, @rid+"|"+@tid)
+    def rem_req_inv # remove inverse request
+      Lovers.redis.zrem(@tc+SENT, @rpu)
+      Lovers.redis.zrem(@uc+RECV, @rpt)
     end
 
     def rem_hid
-      Lovers.redis.zrem(@tid+":"+HIDN, @rid+"|"+@uid)
+      Lovers.redis.zrem(@tc+HIDN, @rpu)
+    end
+
+    def rem_hid_inv # remove inverse request if true
+      Lovers.redis.zrem(@uc+HIDN, @rpt)
     end
 
     def rem_rel
-      Lovers.redis.srem(@uid+':'+RELS, @rid+'|'+@tid) &&
-      Lovers.redis.srem(@tid+':'+RELS, @rid+'|'+@uid)
+      Lovers.redis.srem(@uc+RELS, @rpt) &&
+      Lovers.redis.srem(@tc+RELS, @rpu)
     end
 
     def rel_exists?
-      Lovers.redis.sismember(@uid+':'+RELS, @rid+'|'+@tid) &&
-      Lovers.redis.sismember(@tid+':'+RELS, @rid+'|'+@uid)
+      Lovers.redis.sismember(@uc+RELS, @rpt) &&
+      Lovers.redis.sismember(@tc+RELS, @rpu)
     end
 
     def hid_exists?
-      !!Lovers.redis.zrank(@tid+':'+HIDN, @rid+'|'+@uid)
+      !!Lovers.redis.zrank(@tc+HIDN, @rpu)
     end
   end
 end
