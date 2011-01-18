@@ -7,12 +7,20 @@ Given /^I'm logged in$/ do
 end
 
 Given /^I've sent the following requests:$/ do |table|
-  table.hashes.each { |r| @user.send_req(r[:rid], r[:uid]) }
+  table.hashes.each do |r|
+    Lovers::Rel.new(r[:rid], @user.fb_id, r[:uid]).add_req
+  end
 end
 
 Given /^I've received the following requests:$/ do |table|
   table.hashes.each do |r|
     Lovers::Rel.new(r[:rid], r[:uid], @user.fb_id).add_req
+  end
+end
+
+Given /^I've hidden the following requests:$/ do |table|
+  table.hashes.each do |r|
+    Lovers::Rel.new(r[:rid], r[:uid], @user.fb_id).add_hid
   end
 end
 
@@ -30,12 +38,20 @@ When /^I confirm a "(\d+)" request from user "(\d+)"$/ do |rid, uid|
   @code = @user.conf_req(rid, uid)
 end
 
+When /^I hide a "(\d+)" request from user "(\d+)"$/ do |rid, uid|
+  @code = @user.hide_req(rid, uid)
+end
+
 Then /^I should have "(\d+)" sent requests?$/ do |num|
   @user.reqs_sent.count.should == num.to_i
 end
 
 Then /^I should have "(\d+)" received requests?$/ do |num|
   @user.reqs_recv.count.should == num.to_i
+end
+
+Then /^I should have "(\d+)" hidden requests?$/ do |num|
+  @user.reqs_hidn.count.should == num.to_i
 end
 
 Then /^I should have "(\d+)" relationships?$/ do |num|

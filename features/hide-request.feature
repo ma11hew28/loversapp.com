@@ -1,9 +1,5 @@
 Feature: user hides request
 
-  As a user
-  I want to hide a request
-  So that I can focus on those I love
-
   # Facebook's feedback messages:
   # Request hidden. Take action later on the <Requests page>. <Don't know Matt Di Pasquale?>
   # This friend request is already hidden.
@@ -15,32 +11,38 @@ Feature: user hides request
   # Test the block condition out on Facebook.
   # Also, look at FB's AJAX responses in Firebug.
 
-  Scenario: successful hide
+  Background: Logged in
     Given I'm logged in
-    And I have already received this request
-    When I hide this request
-    Then this request should be hidden
+    And I've hidden the following requests:
+      | rid | uid |
+      | 3   | 10  |
+    And I've received the following requests:
+      | rid | uid |
+      | 2   | 12  |
+    And I'm in the following relationships:
+      | rid | uid |
+      | 4   | 11  |
+
+  Scenario: successful hide
+    When I hide a "2" request from user "12"
+    Then I should have "2" hidden requests
     And the response code should be "1"
     # Request hidden. Take action later from the <Hidden Requests section below>.
 
   Scenario: already hidden
-    Given I'm logged in
-    And I have already hidden this request
-    When I hide this request
-    Then the response code should be "0"
+    When I hide a "3" request from user "10"
+    Then I should have "1" hidden request
+    And the response code should be "0"
     # This request is already hidden.
 
   Scenario: no request - no relationship
-    Given I'm logged in
-    And I haven't already received this request
-    And I'm not already in this relationship
-    When I hide this request
-    Then the response code should be "2"
+    When I confirm a "0" request from user "14"
+    Then I should have "1" hidden request
+    And the response code should be "2"
     # This request doesn't exist.
 
   Scenario: relationship already exists
-    Given I'm logged in
-    And I'm already in this relationship
-    When I ignore this request
-    Then the response code should be "3"
+    When I hide a "4" request from user "11"
+    Then I should have "1" hidden request
+    And the response code should be "3"
     # This relationship already exists. <Remove it>.

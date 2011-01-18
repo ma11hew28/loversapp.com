@@ -17,8 +17,8 @@ module Lovers
       self
     end
 
-    def send_req(rid, uid)
-      rel = Rel.new(rid, fb_id, uid)
+    def send_req(rid, tid)
+      rel = Rel.new(rid, fb_id, tid)
 
       # If inverse request exists, delete it and confirm relationship.
       return rel.add_rel ? "2" : "3" if rel.rem_inv
@@ -29,11 +29,19 @@ module Lovers
     end
 
     def conf_req(rid, uid)
-      rel = Rel.new(rid, fb_id, uid)
+      rel = Rel.new(rid, uid, fb_id)
 
       return rel.add_rel ? "1" : "2" if rel.rem_req
 
-      return rel.rel_exists? ? "2" : "0"
+      return rel.rel_exists? ? "0" : "2"
+    end
+
+    def hide_req(rid, uid)
+      rel = Rel.new(rid, uid, fb_id)
+
+      return rel.add_hid ? "1" : "2" if rel.rem_req
+
+      return rel.hid_exists? ? "0" : "3"
     end
 
     def reqs_sent
@@ -42,6 +50,10 @@ module Lovers
 
     def reqs_recv
       Lovers.redis.zrange(fb_id+':'+Rel::RECV, 0, -1)
+    end
+
+    def reqs_hidn
+      Lovers.redis.zrange(fb_id+':'+Rel::HIDN, 0, -1)
     end
 
     def rels

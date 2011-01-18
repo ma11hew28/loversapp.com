@@ -24,13 +24,13 @@ Feature: user confirms request
   Scenario: no request - no relationship
     When I confirm a "0" request from user "14"
     Then I should have "1" relationship
-    And the response code should be "0"
+    And the response code should be "2"
     # This request doesn't exist. <Send this request>.
 
   Scenario: relationship already exists
     When I confirm a "4" request from user "11"
     Then I should have "1" relationship
-    And the response code should be "2"
+    And the response code should be "0"
     # This relationship already exists.
 
 #   Scenario: logged out
