@@ -8,6 +8,9 @@ Feature: user confirms request
     And I've received the following requests:
       | rid | uid |
       | 2   | 12  |
+    And I've hidden the following requests:
+      | rid | uid |
+      | 1   | 15  |
     And I'm in the following relationships:
       | rid | uid |
       | 4   | 11  |
@@ -17,6 +20,13 @@ Feature: user confirms request
   Scenario: successful confirmation
     When I confirm a "2" request from user "12"
     Then I should have "0" received requests
+    And I should have "2" relationships
+    And the response code should be "1"
+    # Request confirmed. [See what Facebook puts here.]
+
+  Scenario: hidden confirmation
+    When I confirm a "1" request from user "15"
+    Then I should have "0" hidden requests
     And I should have "2" relationships
     And the response code should be "1"
     # Request confirmed. [See what Facebook puts here.]

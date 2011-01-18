@@ -31,7 +31,7 @@ module Lovers
     def conf_req(rid, uid)
       rel = Rel.new(rid, uid, fb_id)
 
-      return rel.add_rel ? "1" : "2" if rel.rem_req
+      return rel.add_rel ? "1" : "2" if rel.rem_req || rel.rem_hid
 
       return rel.rel_exists? ? "0" : "2"
     end
