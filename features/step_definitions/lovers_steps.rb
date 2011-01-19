@@ -46,6 +46,10 @@ When /^I remove a "(\d+)" request from user "(\d+)"$/ do |rid, uid|
   @code = @user.remv_req(rid, uid)
 end
 
+When /^I remove a "(\d+)" relationship from user "(\d+)"$/ do |rid, uid|
+  @code = @user.remv_rel(rid, uid)
+end
+
 Then /^I should have "(\d+)" sent requests?$/ do |num|
   @user.reqs_sent.count.should == num.to_i
 end

@@ -50,6 +50,12 @@ module Lovers
       return (rel.rem_req || rel.rem_hid) ? "1" : "0"
     end
 
+    def remv_rel(rid, uid)
+      rel = Rel.new(rid, uid, fb_id)
+
+      return rel.rem_rel ? "1" : "0"
+    end
+
     def reqs_sent
       Lovers.redis.zrange(fb_id+':'+Rel::SENT, 0, -1)
     end

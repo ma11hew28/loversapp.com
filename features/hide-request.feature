@@ -65,3 +65,16 @@ Feature: user hides request
     Then I should have "1" received request
     And the response code should be "0"
 
+
+# Feature: user removes relationship
+
+  Scenario: successful remove
+    When I remove a "4" relationship from user "11"
+    Then I should have "0" relationships
+    And the response code should be "1"
+
+  Scenario: no relationship
+    When I remove a "0" request from user "14"
+    Then I should have "1" relationship
+    And the response code should be "0"
+
