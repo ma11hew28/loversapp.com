@@ -46,3 +46,22 @@ Feature: user hides request
     Then I should have "1" hidden request
     And the response code should be "3"
     # This relationship already exists. <Remove it>.
+
+
+# Feature: user removes request
+
+  Scenario: successful remove
+    When I remove a "2" request from user "12"
+    Then I should have "0" received requests
+    And the response code should be "1"
+
+  Scenario: hidden request
+    When I remove a "3" request from user "10"
+    Then I should have "0" hidden requests
+    And the response code should be "1"
+
+  Scenario: no request
+    When I remove a "0" request from user "14"
+    Then I should have "1" received request
+    And the response code should be "0"
+
