@@ -26,6 +26,7 @@ Feature: user hides request
   Scenario: successful hide
     When I hide a "2" request from user "12"
     Then I should have "2" hidden requests
+    And I should have "0" received requests
     And the response code should be "1"
     # Request hidden. Take action later from the <Hidden Requests section below>.
 
@@ -36,7 +37,7 @@ Feature: user hides request
     # This request is already hidden.
 
   Scenario: no request - no relationship
-    When I confirm a "0" request from user "14"
+    When I hide a "0" request from user "14"
     Then I should have "1" hidden request
     And the response code should be "2"
     # This request doesn't exist.
@@ -65,6 +66,8 @@ Feature: user hides request
     Then I should have "1" received request
     And the response code should be "0"
 
+  # TDOD: Implement if Facebook does
+  # Scenario: relationship exists
 
 # Feature: user removes relationship
 

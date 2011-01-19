@@ -39,9 +39,9 @@ module Lovers
     def hide_req(rid, uid)
       rel = Rel.new(rid, uid, fb_id)
 
-      return rel.add_hid ? "1" : "2" if rel.rem_req
+      return rel.add_hid ? "1" : "0" if rel.rem_req
 
-      return rel.hid_exists? ? "0" : "3"
+      return rel.hid_exists? ? "0" : (rel.rel_exists? ? "3" : "2")
     end
 
     def remv_req(rid, uid)
