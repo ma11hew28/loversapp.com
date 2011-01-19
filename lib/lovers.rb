@@ -4,17 +4,6 @@ require 'redis' # for storing app_users, requests, relationships, etc.
 require 'base64'
 require 'hmac-sha2'
 
-# This is probably not so polite. How do better?
-class String
-  def uncapitalize
-    self[0].downcase + self[1..-1]
-  end
-
-  def pluralize
-    self + 's'
-  end
-end
-
 require 'lovers/conf' # set Facebook constants, etc.
 require 'lovers/user'
 require 'lovers/rel'

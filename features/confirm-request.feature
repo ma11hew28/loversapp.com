@@ -46,4 +46,4 @@ Feature: user confirms request
 #   Scenario: logged out
 #     Given I'm logged out
 #     When I confirm a "2" request from user "12"
-#     Then the response code should be "9"
+#     Then the response code should be "8"
