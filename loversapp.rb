@@ -11,16 +11,13 @@ end
 
 enable :sessions
 
-before { content_type 'application/json' }
+before '/fb/canvas/r*' do
+  content_type 'application/json'
+  @user = Lovers::User.authorize(params[:signed_request] || session[:u])
+end
 
-
-###############################################################################
-# Models ######################################################################
-###############################################################################
-
-get '/' do
-  content_type 'text/html'
-  "Hello world!"
+error do
+  request.env['sinatra.error'].class::CODE
 end
 
 
@@ -30,16 +27,15 @@ end
 
 # GET (serve) the Facebook app's canvas page.
 get '/fb/canvas/' do
-  content_type 'text/html'
   cache_control :public, :max_age => 31536000 # seconds (1 year)
+  @fb_app_id = Lovers::FB_APP_ID
   erb :main
 end
 
 # Initial Facebook request comes in as a POST with a signed_request.
 post '/fb/canvas/' do
-  content_type 'text/html'
-  user = Lovers::User.new.login(params[:signed_request])
-  @rels = {:reqs => user.reqs_recv, :rels => user.reqs_sent}
+  cache_control :public, :max_age => 31536000 # seconds (1 year)
+  @fb_app_id = Lovers::FB_APP_ID
   erb :main
 end
 
@@ -64,47 +60,22 @@ end
 #   100:reqSent => ["1|123", "2|123", "2|134"]  # format: ["rid|tid"]
 #   100:reqRecv => ["3|343", "5|142", "4|2224"] # format: ["rid|uid"]
 
-REL = {
-  :"0" => "Relationship",
-  :"1" => "Engagement",
-  :"2" => "Marriage",
-  :"3" => "It's Complicated",
-  :"4" => "Open Relationship",
-  :"5" => "Valentine"
-}
-NUM_RELS = REL.size
-
-# GET (show) all requests for a user.
+# GET (show) received & hidden requests for a user.
 get '/fb/canvas/reqs' do
-  @user = Lovers::User.new
-  @user.login(params[:signed_request])
-  @user.reqs_recv.inspect
+  @user.reqs.to_json
+end
+post '/fb/canvas/reqs' do # for Facebook POST
+  @user.reqs.to_json
 end
 
 # POST (add) a request from one user (uid) to another (tid)
-post '/fb/canvas/reqs' do
-  # fb.user.request(validate_params(params[:rid], params[:tid]))
-
-  # Validate that uid, tid, rid are integers and rid is btw 0 to NUM_RELS.
-  tid, rid = params[:tid], params[:rid]
-  return PERR unless valid_rel?(rid)
-  return PERR unless (Integer(uid) && Integer(tid) && uid != tid rescue false)
-
-  user = Lovers::User.new
-  user.login(session[:u])
-  user.send_req(rid, tid)
+post '/fb/canvas/req' do
+  @user.send_req(validate_rid_uid(params[:rid], params[:tid]))
 end
 
 # DELETE (ignore) a request.
-delete '/fb/canvas/reqs' do
-  # Validate that uid, tid, rid are integers and rid is btw 0 to NUM_RELS.
-  tid, rid = params[:tid], params[:rid]
-  return PERR unless valid_rel?(rid)
-  return PERR unless (Integer(uid) && Integer(tid) && uid != tid rescue false)
-
-  # Remove the request.
-  REDIS.zrem(tid+':reqSent', rid+'|'+uid) # not shown but may in future
-  REDIS.zrem(uid+':reqRecv', rid+'|'+tid) ? "1" : "0"
+delete '/fb/canvas/req' do
+  @user.remv_req(validate_rid_uid(params[:rid], params[:uid]))
 end
 
 
@@ -114,37 +85,20 @@ end
 
 # GET (show) all relationships for a user.
 get '/fb/canvas/rels' do
-  # Validate that uid is an integer.
-  uid = params[:uid] || "2"; # get this from session
-  return PERR unless (Integer(uid) rescue false)
-  REDIS.smembers(uid+':rels').inspect
+  @user.rels.inspect
+end
+post '/fb/canvas/rels' do
+  @user.rels.inspect
 end
 
 # POST (confirm/add) a relationship between two users.
-post '/fb/canvas/rels' do
-  # Validate that uid, tid, rid are integers and rid is btw 0 to NUM_RELS.
-  uid, tid, rid = params[:uid], params[:tid], params[:rid] # get uid from FB
-  return PERR unless valid_rel?(rid)
-  return PERR unless (Integer(uid) && Integer(tid) && uid != tid rescue false)
-
-  # Remove the request, and add the relationship.
-  urel, trel = rid+'|'+uid, rid+'|'+tid
-  REDIS.zrem(tid+':reqSent', urel) # not shown but may in future
-  if REDIS.zrem(uid+':reqRecv', trel)
-    REDIS.sadd(uid+':rels', trel) && REDIS.sadd(tid+':rels', urel) ? "1" : "0"
-  else "o" end # no request
+post '/fb/canvas/rel' do
+  @user.conf_req(validate_rid_uid(params[:rid], params[:uid]))
 end
 
 # DELETE (break up) a relationship.
-delete '/fb/canvas/rels' do
-  # Validate that uid, tid, rel are integers and rel is btw 0 to NUM_RELS.
-  uid, tid, rid = params[:uid], params[:tid], params[:rid] # get uid from FB
-  return PERR unless valid_rel?(rid)
-  return PERR unless (Integer(uid) && Integer(tid) && uid != tid rescue false)
-
-  # Remove the relationship.
-  REDIS.srem(uid+':rels', rid+'|'+tid) ||
-  REDIS.srem(tid+':rels', rid+'|'+uid) ? "1" : "0"
+delete '/fb/canvas/rel' do
+  @user.remv_rel(validate_rid_uid(params[:rid], params[:uid]))
 end
 
 
@@ -152,13 +106,22 @@ end
 # Utility Methods #############################################################
 ###############################################################################
 
-def valid_rel?(rid)
-  rid = Integer(rid) rescue (return false)
-  return NUM_RELS > rid && rid > 0
+# Validate that rid is an integer between 0 & RELN, inclusive.
+def validate_rid(rid)
+  rid = Integer(rid)
+  raise if rid < 0 || Lovers::RELN <= rid
+  rid
+  rescue
+    raise Lovers::RequestIdInvalid
 end
 
-def valid_int?(str)
-  Integer(uid)
+def validate_uid(uid)
+  Integer(uid) rescue raise Lovers::TargetIdInvalid
+end
+
+# Validate that tid & rid are integers and rid is btw 0 to RELN.
+def validate_rid_uid(rid, uid)
+  [validate_rid(rid), validate_uid(uid)]
 end
 
 # @staticmethod

@@ -2,10 +2,13 @@ module Lovers
   class User
     attr_reader :fb_id #, :access_token, :locale, :signed_request #, etc.
 
+    def self.authorize(signed_request)
+      return new.login(signed_request)
+    end
+
     # http://developers.facebook.com/docs/authentication/canvas
     # Initialize the user state from a signed_request.
     def login(signed_request)
-      return if signed_request.nil?
       encoded_signature, encoded_data = signed_request.split('.')
       signature = base64_url_decode(encoded_signature)
       expected_signature = HMAC::SHA256.digest(FB_APP_SECRET, encoded_data)
@@ -13,8 +16,10 @@ module Lovers
         signed_request = JSON.parse base64_url_decode(encoded_data)
         @fb_id = signed_request["user_id"]
         # @access_token = signed_request["oauth_token"]
-      end
+      else raise end
       self
+    rescue
+      raise AuthenticationError
     end
 
     def send_req(rid, tid)
@@ -54,6 +59,10 @@ module Lovers
       rel = Rel.new(rid, uid, fb_id)
 
       return rel.rem_rel ? "1" : "0"
+    end
+
+    def reqs
+      {:sent => reqs_sent, :hidn => reqs_hidn}
     end
 
     def reqs_sent

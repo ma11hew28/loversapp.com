@@ -48,7 +48,7 @@
   LVRS = window.LVRS || {};
 
   LVRS.config = {
-    appId: 120027745430
+    appId: <%= @fb_app_id %>
   };
 
   // LVRS.getName = function(uid, callback) {
@@ -105,6 +105,6 @@
 
   $(function() {
     FB.Canvas.setAutoResize();
-    LVRS.bootstrap(<%= @rels.to_json %>);
+    LVRS.bootstrap(<%#= @rels.to_json %>);
   });
 </script>

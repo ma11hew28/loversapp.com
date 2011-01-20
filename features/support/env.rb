@@ -3,8 +3,8 @@ ENV["RACK_ENV"] = "cucumber"
 require 'ruby-debug'
 require 'rspec-expectations'
 
-$LOAD_PATH << File.expand_path('../../../lib', __FILE__)
-$LOAD_PATH << File.expand_path('..', __FILE__)
+$LOAD_PATH << File.expand_path("../../../lib", __FILE__)
+$LOAD_PATH << File.expand_path("..", __FILE__)
 
 require 'lovers'
 

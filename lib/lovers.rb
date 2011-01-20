@@ -4,9 +4,11 @@ require 'redis' # for storing app_users, requests, relationships, etc.
 require 'base64'
 require 'hmac-sha2'
 
-require 'lovers/conf' # set Facebook constants, etc.
-require 'lovers/user'
-require 'lovers/rel'
+path = File.expand_path "../../lib/lovers", __FILE__
+require path+"/conf" # set Facebook constants, etc.
+require path+"/errors"
+require path+"/user"
+require path+"/rel"
 
 module Lovers
   class << self
