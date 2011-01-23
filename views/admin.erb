@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <title>Lovers on Facebook</title>
+</head>
+<body>
+  <h1>Lovers Administration</h1>
+
+  <h2>App Users</h2>
+  <ol>
+    <% @appUsrs.each do |u| %>
+      <li><%= u %></li>
+    <% end %>
+  </ol>
+
+  <h2>Old Users</h2>
+  <ol>
+    <% @oldUsrs.each do |u| %>
+      <li><%= u %></li>
+    <% end %>
+  </ol>
+
+  <%= erb :ga, :layout => false %>
+</body>
+</html>

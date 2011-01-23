@@ -1,11 +1,11 @@
-require 'sinatra'
+require 'sinatra/base'
 require 'erb' # use Erb templates
 
 class Lovers::Server < Sinatra::Base
 
-  #############################################################################
-  # Configure #################################################################
-  #############################################################################
+  ##############################################################################
+  # Configure ##################################################################
+  ##############################################################################
 
   configure :development do
     require 'ruby-debug'
@@ -27,42 +27,55 @@ class Lovers::Server < Sinatra::Base
   end
 
 
-  #############################################################################
-  # Canvas ####################################################################
-  #############################################################################
+  ##############################################################################
+  # Canvas #####################################################################
+  ##############################################################################
 
   # Initial Facebook request comes in as a POST with a signed_request.
   post '/fb/canvas/' do
     # If we do cache control, I don't think the cookie will get set.
     # cache_control :public, :max_age => 31536000 # seconds (1 year)
     # @fb_app_id = Lovers::Conf.fb_app_id
-    @user = Lovers::User.auth(params[:signed_request])
+    user = Lovers::User.auth(params[:signed_request])
 
     # Remember user for 1 day for future AJAX requests.
-    session["u"], session["t"] = @user.fb_id, Time.now.to_i+86400
+    session["u"], session["t"] = user.fb_id, Time.now.to_i+86400
 
     erb :main
   end
 
+  post '/fb/deauth' do
+    Lovers::User.auth(params[:signed_request]).rem_app_user  
+  end
 
-  #############################################################################
-  # Share #####################################################################
-  #############################################################################
+  post '/fb/canvas/admin' do
+    user = Lovers::User.auth(params[:signed_request])
+    unless Lovers::Conf.admin_uids.include? user.fb_id
+      return redirect "/fb/canvas/"
+    end
+    @appUsrs = Lovers.redis.smembers("appUsrs")
+    @oldUsrs = Lovers.redis.smembers("oldUsrs")
+    erb :admin, :layout => false
+  end
+  
+
+  ##############################################################################
+  # Share ######################################################################
+  ##############################################################################
   # Facebook Stream API
   # - Show all my friends posts
   # - Show all posts
 
 
-  #############################################################################
-  # Requests ##################################################################
-  #############################################################################
+  ##############################################################################
+  # Requests ###################################################################
+  ##############################################################################
   # How can we manage requests on Facebook? If we can set a type for each sent
   # request and get & delete them, then we could replace this request code.
   #
   # Each user has two Redis ordered sets (`reqSent` & `reqRecv`) that store
-  # uids.  The SCORE that we order the requests by is `time` (UNIX timestamp).
-  # The request id (rid) is encoded as a number and prepended to the uid.
-  # rid|uid
+  # uids. The SCORE that we order the requests by is `time` (UNIX timestamp).
+  # The request id (rid) is encoded as number and prepended to the uid. rid|uid
   #
   # E.g., for the user with uid=100, we might have:
   #   100:reqSent => ["1|123", "2|123", "2|134"]  # format: ["rid|tid"]
@@ -84,9 +97,9 @@ class Lovers::Server < Sinatra::Base
   end
 
 
-  #############################################################################
-  # Relationships #############################################################
-  #############################################################################
+  ##############################################################################
+  # Relationships ##############################################################
+  ##############################################################################
 
   # GET (show) all relationships for a user.
   get '/fb/canvas/rels' do
@@ -104,9 +117,9 @@ class Lovers::Server < Sinatra::Base
   end
 
 
-  #############################################################################
-  # Utility Methods ###########################################################
-  #############################################################################
+  ##############################################################################
+  # Utility Methods ############################################################
+  ##############################################################################
 
   # Validate that rid is an integer between 0 & Lovers::Conf.reln, inclusive.
   def validate_rid(rid)

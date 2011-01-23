@@ -8,7 +8,7 @@ require 'base64'
 module Lovers
   class << self
     def redis
-      @@redis ||= if env == "production"
+      @@redis ||= if env == "production" || env == "staging"
         uri = URI.parse(ENV["REDISTOGO_URL"])
         Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
       elsif env == "cucumber"

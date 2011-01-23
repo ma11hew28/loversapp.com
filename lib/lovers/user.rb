@@ -15,14 +15,20 @@ module Lovers
       expected_signature = OpenSSL::HMAC.digest('sha256', Lovers::Conf.fb_app_secret, encoded_data)
       if signature == expected_signature
         signed_request = JSON.parse base64_url_decode(encoded_data)
-        User.new(signed_request["user_id"]).tap { |u| u.add_to_app_users }
+        User.new(signed_request["user_id"]).tap { |u| u.add_app_user }
       else raise end
     rescue
       raise AuthenticationError
     end
 
-    def add_to_app_users
-      Lovers.redis.sadd("appUsers", fb_id)
+    def add_app_user
+      Lovers.redis.sadd("appUsrs", fb_id)
+      Lovers.redis.srem("oldUsrs", fb_id)
+    end
+
+    def rem_app_user
+      Lovers.redis.srem("appUsrs", fb_id)
+      Lovers.redis.sadd("oldUsrs", fb_id)
     end
 
     def send_req(rid, tid)
