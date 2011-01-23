@@ -5,21 +5,15 @@ require 'json'  # for JSON responses
 require 'openssl'
 require 'base64'
 
-path = File.expand_path "../../lib/lovers", __FILE__
-require path+"/conf" # set Facebook constants, etc.
-require path+"/errors"
-require path+"/user"
-require path+"/rel"
-
 module Lovers
   class << self
     def redis
-      @@redis ||= if ENV["RACK_ENV"] == "production"
+      @@redis ||= if env == "production"
         uri = URI.parse(ENV["REDISTOGO_URL"])
         Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
-      elsif ENV["RACK_ENV"] == "cucumber"
+      elsif env == "cucumber"
         Redis.new(:port => 6398)
-      elsif ENV["RACK_ENV"] == "test"
+      elsif env == "test"
         Redis.new(:port => 6397)
       else
         Redis.new
@@ -29,5 +23,15 @@ module Lovers
     def root
       @root ||= File.expand_path("../..", __FILE__)
     end
+
+    def env
+      ENV["RACK_ENV"] || "development"
+    end
   end
 end
+
+require "lovers/conf"
+require "lovers/errors"
+require "lovers/user"
+require "lovers/rel"
+require "lovers/server"

@@ -3,7 +3,7 @@
 Thumbs.db
 *.swp
 *~
-conf.rb
+lovers.yml
 .bundle
 .dropbox
 tmp

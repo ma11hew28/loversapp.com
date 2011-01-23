@@ -12,7 +12,7 @@ module Lovers
     def self.auth(signed_request)
       encoded_signature, encoded_data = signed_request.split('.')
       signature = base64_url_decode(encoded_signature)
-      expected_signature = OpenSSL::HMAC.digest('sha256', FB_APP_SECRET, encoded_data)
+      expected_signature = OpenSSL::HMAC.digest('sha256', Lovers::Conf.fb_app_secret, encoded_data)
       if signature == expected_signature
         signed_request = JSON.parse base64_url_decode(encoded_data)
         User.new(signed_request["user_id"]).tap { |u| u.add_to_app_users }

@@ -14,7 +14,7 @@ module RedisTestSetup
     end
     Kernel.at_exit do
       if (pid = `cat #{dir_temp}/redis-#{env}.pid`.strip) =~ /^\d+$/
-        Process.kill("QUIT", pid.to_i)
+        Process.kill("QUIT", pid.to_i) rescue nil
         self.cleanup(dir_temp, env)
       end
     end

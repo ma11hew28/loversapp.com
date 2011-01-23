@@ -1,6 +1,6 @@
 Given /^I'm logged in$/ do
-  @user = Lovers::User.auth(Lovers::SIGNED_REQUEST)
-  # @user.fb_id.should == "514417"
+  @user = Lovers::User.auth(LoversTest::SIGNED_REQUEST)
+  @user.fb_id.should == LoversTest::UID
 end
 
 Given /^I've sent the following requests:$/ do |table|
@@ -73,13 +73,13 @@ Given /^I'm not already authenticated$/ do
 end
 
 When /^I go to the canvas page$/ do
-  # post request w signed_request to FB_CANVAS_URL /fb/canvas/
-  @cookie = %x[curl -d 'signed_request=#{Lovers::Test::SIGNED_REQUEST}' -D '-' -s #{Lovers::Test::URL} | grep Set-Cookie]
-  @cookie.gsub! /^.*rack.session=(.*?);.*$/, '\1'
+  @cookie = page.driver.post("/fb/canvas/", {
+    'signed_request' => LoversTest::SIGNED_REQUEST
+  }).headers['Set-Cookie'].gsub(/^.*rack.session=(.*?);.*$/, '\1')
 end
 
 When /^I'm authenticated$/ do
-  @user = Lovers::User.auth(Lovers::Test::SIGNED_REQUEST)  
+  @user = Lovers::User.auth(LoversTest::SIGNED_REQUEST)
 end
 
 Then /^I should be remembered$/ do
@@ -87,7 +87,7 @@ Then /^I should be remembered$/ do
 end
 
 Then /^I should be an app user$/ do
-  @user = Lovers::User.auth(Lovers::Test::SIGNED_REQUEST)  
+  @user = Lovers::User.auth(LoversTest::SIGNED_REQUEST)
   Lovers.redis.sismember("appUsrs", @user.fb_id).should be_true
 end
 

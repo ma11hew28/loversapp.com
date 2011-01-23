@@ -1,6 +1,9 @@
-require 'sinatra'
+require 'rubygems'
+require 'bundler'
 
-path = File.expand_path "..", __FILE__
-require path+"/loversapp.rb"
+Bundler.setup(:default, (ENV["RACK_ENV"] || "development").to_sym)
 
-run Sinatra::Application
+$LOAD_PATH << File.expand_path(File.join(File.dirname(__FILE__), "lib"))
+require 'lovers'
+
+run Lovers::Server

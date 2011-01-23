@@ -11,7 +11,7 @@
   <script>
     window.fbAsyncInit = function() {
       FB.init({
-        appId:  "<%= Lovers::FB_APP_ID %>",
+        appId:  "<%= Lovers::Conf.fb_app_id %>",
         status: true, // check login status
         cookie: true, // enable cookies to allow the server to access the session
         xfbml:  true, // parse XFBML
