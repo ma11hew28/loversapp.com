@@ -2,24 +2,27 @@ module Lovers
   class User
     attr_reader :fb_id #, :access_token, :locale, :signed_request #, etc.
 
-    def self.authorize(signed_request)
-      return new.login(signed_request)
+    def initialize(fb_id)
+      @fb_id = fb_id
+      # @access_token = access_token
     end
-
+ 
+    # Authenticate the user from a signed_request.
     # http://developers.facebook.com/docs/authentication/canvas
-    # Initialize the user state from a signed_request.
-    def login(signed_request)
+    def self.auth(signed_request)
       encoded_signature, encoded_data = signed_request.split('.')
       signature = base64_url_decode(encoded_signature)
-      expected_signature = HMAC::SHA256.digest(FB_APP_SECRET, encoded_data)
+      expected_signature = OpenSSL::HMAC.digest('sha256', FB_APP_SECRET, encoded_data)
       if signature == expected_signature
         signed_request = JSON.parse base64_url_decode(encoded_data)
-        @fb_id = signed_request["user_id"]
-        # @access_token = signed_request["oauth_token"]
+        User.new(signed_request["user_id"]).tap { |u| u.add_to_app_users }
       else raise end
-      self
     rescue
       raise AuthenticationError
+    end
+
+    def add_to_app_users
+      Lovers.redis.sadd("appUsers", fb_id)
     end
 
     def send_req(rid, tid)
@@ -85,7 +88,7 @@ module Lovers
 
     # This should be a method of another class. Maybe a Util class.
     # https://github.com/ptarjan/base64url/blob/master/ruby.rb
-    def base64_url_decode(str)
+    def self.base64_url_decode(str)
       str += '=' * (4 - (short = str.size.modulo(4))) unless short == 0
       Base64.decode64(str.tr('-_', '+/'))
     end

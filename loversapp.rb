@@ -9,11 +9,15 @@ configure :development do
   require 'ruby-debug'
 end
 
-enable :sessions
+# enable :sessions # cookie-based sessions - method below allows more options
+# No expires: cookie lasts til browser closes or user deletes it.
+# This works cause FB POSTs signed_request everytime app loads.
+use Rack::Session::Cookie, :domain => Lovers::FB_CANVAS_PAGE,
+                           :secret => Lovers::FB_APP_SECRET
 
 before '/fb/canvas/r*' do
   content_type 'application/json'
-  @user = Lovers::User.authorize(params[:signed_request] || session[:u])
+  @user = Lovers::User.new(session["u"])
 end
 
 error do
@@ -25,19 +29,19 @@ end
 # Canvas ######################################################################
 ###############################################################################
 
-# GET (serve) the Facebook app's canvas page.
-get '/fb/canvas/' do
-  cache_control :public, :max_age => 31536000 # seconds (1 year)
-  @fb_app_id = Lovers::FB_APP_ID
+# Initial Facebook request comes in as a POST with a signed_request.
+post '/fb/canvas/' do
+  # If we do cache control, I don't think the cookie will get set.
+  # cache_control :public, :max_age => 31536000 # seconds (1 year)
+  # @fb_app_id = Lovers::FB_APP_ID
+  @user = Lovers::User.auth(params[:signed_request])
+
+  # Remember user for 1 day for future AJAX requests.
+  session["u"], session["t"] = @user.fb_id, Time.now.to_i+86400
+
   erb :main
 end
 
-# Initial Facebook request comes in as a POST with a signed_request.
-post '/fb/canvas/' do
-  cache_control :public, :max_age => 31536000 # seconds (1 year)
-  @fb_app_id = Lovers::FB_APP_ID
-  erb :main
-end
 
 ###############################################################################
 # Share #######################################################################
@@ -64,9 +68,6 @@ end
 get '/fb/canvas/reqs' do
   @user.reqs.to_json
 end
-post '/fb/canvas/reqs' do # for Facebook POST
-  @user.reqs.to_json
-end
 
 # POST (add) a request from one user (uid) to another (tid)
 post '/fb/canvas/req' do
@@ -85,9 +86,6 @@ end
 
 # GET (show) all relationships for a user.
 get '/fb/canvas/rels' do
-  @user.rels.inspect
-end
-post '/fb/canvas/rels' do
   @user.rels.inspect
 end
 

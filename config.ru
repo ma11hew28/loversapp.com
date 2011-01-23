@@ -1,8 +1,6 @@
-path = File.expand_path "..", __FILE__
-
 require 'sinatra'
-require 'json'
 
+path = File.expand_path "..", __FILE__
 require path+"/loversapp.rb"
 
 run Sinatra::Application

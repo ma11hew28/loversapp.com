@@ -1,8 +1,9 @@
 require 'redis' # for storing app_users, requests, relationships, etc.
+require 'json'  # for JSON responses
 
-# Facebook signed_request
+# for decoding Facebook signed_request
+require 'openssl'
 require 'base64'
-require 'hmac-sha2'
 
 path = File.expand_path "../../lib/lovers", __FILE__
 require path+"/conf" # set Facebook constants, etc.
@@ -23,6 +24,10 @@ module Lovers
       else
         Redis.new
       end
+    end
+
+    def root
+      @root ||= File.expand_path("../..", __FILE__)
     end
   end
 end

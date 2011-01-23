@@ -1,8 +1,5 @@
 Given /^I'm logged in$/ do
-  @user = Lovers::User.new
-  # example signed request Facebook sent via POST request to FB_CANVAS_URL
-  signed_request = "FG1uGHoaGeNH2lxcfJG8AU1MBosRPTf_Wf6R5HQo-2Y.eyJhbGdvcml0aG0iOiJITUFDLVNIQTI1NiIsImV4cGlyZXMiOjEyOTQ1MTY4MDAsImlzc3VlZF9hdCI6MTI5NDUxMjQ3Miwib2F1dGhfdG9rZW4iOiIxMjAwMjc3NDU0MzB8Mi5FS1NJd2FOZ21GN1c3aF9pTV9BM2Z3X18uMzYwMC4xMjk0NTE2ODAwLTUxNDQxN3xHV3dUT3FzWnI1S1pSUTBwVWFEMVB3MjhZSDgiLCJ1c2VyIjp7ImxvY2FsZSI6ImVuX1VTIiwiY291bnRyeSI6InVzIn0sInVzZXJfaWQiOiI1MTQ0MTcifQ"
-  @user.login(signed_request).should_not be_nil
+  @user = Lovers::User.auth(Lovers::SIGNED_REQUEST)
   # @user.fb_id.should == "514417"
 end
 
@@ -68,5 +65,29 @@ end
 
 Then /^the response code should be "(\d+)"$/ do |code|
   @code.should == code
+end
+
+# user authenticates himself
+
+Given /^I'm not already authenticated$/ do
+end
+
+When /^I go to the canvas page$/ do
+  # post request w signed_request to FB_CANVAS_URL /fb/canvas/
+  @cookie = %x[curl -d 'signed_request=#{Lovers::Test::SIGNED_REQUEST}' -D '-' -s #{Lovers::Test::URL} | grep Set-Cookie]
+  @cookie.gsub! /^.*rack.session=(.*?);.*$/, '\1'
+end
+
+When /^I'm authenticated$/ do
+  @user = Lovers::User.auth(Lovers::Test::SIGNED_REQUEST)  
+end
+
+Then /^I should be remembered$/ do
+  pending # express the regexp above with the code you wish you had
+end
+
+Then /^I should be an app user$/ do
+  @user = Lovers::User.auth(Lovers::Test::SIGNED_REQUEST)  
+  Lovers.redis.sismember("appUsrs", @user.fb_id).should be_true
 end
 
