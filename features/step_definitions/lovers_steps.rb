@@ -69,7 +69,8 @@ end
 
 # user authenticates himself
 
-Given /^I'm not already authenticated$/ do
+Given /^I'm (not )?already authenticated$/ do |skip|
+  @user = Lovers::User.auth(LoversTest::SIGNED_REQUEST) unless skip
 end
 
 When /^I go to the canvas page$/ do
@@ -78,16 +79,14 @@ When /^I go to the canvas page$/ do
   }).headers['Set-Cookie'].gsub(/^.*rack.session=(.*?);.*$/, '\1')
 end
 
-When /^I'm authenticated$/ do
-  @user = Lovers::User.auth(LoversTest::SIGNED_REQUEST)
-end
-
-Then /^I should be remembered$/ do
-  pending # express the regexp above with the code you wish you had
-end
+# Then /^I should be remembered$/ do
+#   @cookie.should == LoversTest::COOKIE
+# end
 
 Then /^I should be an app user$/ do
-  @user = Lovers::User.auth(LoversTest::SIGNED_REQUEST)
-  Lovers.redis.sismember("appUsrs", @user.fb_id).should be_true
+  Lovers.redis.sismember("appUsrs", LoversTest::UID).should be_true
 end
 
+When /^I click on the Lovers tab$/ do
+  puts page.driver.get("/fb/canvas/rels")
+end

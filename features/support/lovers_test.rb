@@ -7,5 +7,5 @@ module LoversTest
   UID = "514417"
 
   # example cookie generated from signed_request above
-  COOKIE = ""
+  COOKIE = "BAh7B0kiBnUGOgZFRkkiCzUxNDQxNwY7AFRJIgZ0BjsARmwrB2PXPk0%3D%0A--b6b8e49df2c4a9d588e28fdee3500c2c529a8027"
 end

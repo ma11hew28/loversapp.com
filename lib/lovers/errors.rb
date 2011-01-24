@@ -13,14 +13,18 @@ module Lovers
     CODE = "9"
   end
 
+  class NonAppUser < AuthenticationError
+    CODE = "8"
+  end
+
   # Raised when the request ID is invalid
   class RequestIdInvalid < ParamsInvalid
-    CODE = "8"
+    CODE = "7"
   end
 
   # Raised when the target ID is invalid
   class TargetIdInvalid < ParamsInvalid
-    CODE = "7"
+    CODE = "6"
   end
 
 end

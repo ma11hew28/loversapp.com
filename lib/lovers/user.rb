@@ -3,7 +3,7 @@ module Lovers
     attr_reader :fb_id #, :access_token, :locale, :signed_request #, etc.
 
     def initialize(fb_id)
-      @fb_id = fb_id
+      Integer(@fb_id = fb_id) rescue raise NonAppUser
       # @access_token = access_token
     end
  
