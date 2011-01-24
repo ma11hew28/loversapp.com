@@ -25,3 +25,5 @@ module RedisTestSetup
     `rm -f #{dir_temp}/redis-#{env}.pid`
   end
 end
+
+RedisTestSetup.start_redis!(:cucumber)
