@@ -10,13 +10,17 @@ module Lovers
     def redis
       @@redis ||= if env == "production" || env == "staging"
         uri = URI.parse(ENV["REDISTOGO_URL"])
-        Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
+        Redis.new({
+          :host => uri.host,
+          :port => uri.port,
+          :password => uri.password
+        })
       elsif env == "cucumber"
         Redis.new(:port => 6398)
       elsif env == "test"
         Redis.new(:port => 6397)
       else
-        Redis.new
+        Redis.new(:port => ENV["REDIS_PORT"])
       end
     end
 
