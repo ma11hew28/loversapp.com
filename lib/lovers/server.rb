@@ -22,8 +22,15 @@ class Lovers::Server < Sinatra::Base
     @user = Lovers::User.new(session["u"])
   end
 
+  set :show_exceptions, false
+
   error do
-    request.env['sinatra.error'].class::CODE
+    e = request.env['sinatra.error']
+    if e.is_a? Lovers::LoversError
+      e.class::CODE
+    else
+      raise e
+    end
   end
 
 
