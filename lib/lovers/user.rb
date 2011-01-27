@@ -16,13 +16,14 @@ module Lovers
         signed_request = JSON.parse base64_url_decode(encoded_data)
         User.new(signed_request["user_id"]).tap { |u| u.add_app_user }
       else raise "expected_signature: " + expected_signature end
-    rescue => e # let's catch all errors?
+    rescue StandardError => e
       raise AuthenticationError.new "signed_request: #{signed_request} - #{e.inspect}"
     end
 
     def self.auth(*args)
       auth!(*args)
-    rescue AuthenticationError
+    rescue AuthenticationError => e
+      Lovers.logger << e.inpsect
       nil
     end
 

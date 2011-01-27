@@ -3,7 +3,7 @@ module Lovers
   class LoversError < StandardError
   end
 
-  class UnkownError < LoversError
+  class UnknownError < LoversError
     CODE = "9"    
   end
   

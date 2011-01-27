@@ -8,6 +8,7 @@ Feature: user confirms request
     And I've received the following requests:
       | rid | uid |
       | 2   | 12  |
+      | 0   | 11  |
     And I've hidden the following requests:
       | rid | uid |
       | 1   | 15  |
@@ -37,7 +38,7 @@ Feature: user confirms request
     And the response code should be "2"
     # This request doesn't exist. <Send this request>.
 
-  Scenario: relationship already exists
+  Scenario: same relationship already exists
     When I confirm a "4" request from user "11"
     Then I should have "1" relationship
     And the response code should be "0"

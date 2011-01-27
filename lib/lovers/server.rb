@@ -13,7 +13,11 @@ class Lovers::Server < Sinatra::Base
 
   # enable :sessions # cookie-based sessions - method below allows more options
   # No expires: cookie lasts til browser closes or user deletes it.
-  # This works cause FB POSTs signed_request everytime app loads.
+  # This works cause FB POSTs signed_request everytime app loads in browser.
+  # On server, however, to limit use of hijacked session, let's verify that
+  # cookie is less than 1 day old via session["t"].
+  # Note: Should we roll our own session implementation, using Facebook's
+  # signing method, so that we can use auth both for session & cookie?
   use Rack::Session::Cookie, :domain => Lovers::Conf.fb_canvas_page,
                              :secret => Lovers::Conf.fb_app_secret
 
@@ -27,20 +31,14 @@ class Lovers::Server < Sinatra::Base
   error do
     begin
       e = request.env['sinatra.error']
-      Lovers.logger << e.inpsect      
+      Lovers.logger << e.inpsect
       e.class::CODE
     rescue
       Lovers::UnknownError::CODE
     end
   end
 
-
-  ##############################################################################
-  # Canvas #####################################################################
-  ##############################################################################
-
   helpers do
-
     def authurl
       url    = Rack::Utils.escape("http://apps.facebook.com/#{Lovers::Conf.fb_canvas_name}/")
       base   = 'https://www.facebook.com/dialog/oauth'
@@ -57,7 +55,7 @@ class Lovers::Server < Sinatra::Base
   post '/fb/canvas/' do
     # If we do cache control, I don't think the cookie will get set.
     # cache_control :public, :max_age => 31536000 # seconds (1 year)
-    # @fb_app_id = Lovers::Conf.fb_app_id
+
     if @user = Lovers::User.auth(params[:signed_request])
       # Remember user for 1 day for future AJAX requests.
       session["u"], session["t"] = @user.fb_id, Time.now.to_i+86400
@@ -67,11 +65,11 @@ class Lovers::Server < Sinatra::Base
   end
 
   post '/fb/deauth' do
-    Lovers::User.auth(params[:signed_request]).rem_app_user  
+    Lovers::User.auth!(params[:signed_request]).rem_app_user  
   end
 
   post '/fb/canvas/admin' do
-    user = Lovers::User.auth(params[:signed_request])
+    user = Lovers::User.auth!(params[:signed_request])
     unless Lovers::Conf.admin_uids.include? user.fb_id
       return redirect "/fb/canvas/"
     end

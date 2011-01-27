@@ -50,11 +50,21 @@ Feature: user sends request
     And I should have "2" relationships
     And the response code should be "2"
 
-  Scenario: relationship already exists
+  Scenario: same relationship already exists
     When I send a "4" request to user "11"
     Then I should have "1" sent requests
     And the response code should be "3"
 
+  # The front-end UI will have all my reqs & rels loaded. So, it should
+  # confirm, "You're already [in a complicated relationship with] Matt Di
+  # Pasquale. You may only be in one type of relationship with one person at a
+  # time. Are you sure you want to request to be [Married] instead? We will
+  # only change your relationship if Matt confirms this request."
+  Scenario: different relationship already exists
+    When I send a "3" request to user "11"
+    Then I should have "2" sent requests
+    And the response code should be "1"
+    
   # # TODO: How do we generalize this for all features?
   # Scenario: logged out
   #   Given I'm logged out
