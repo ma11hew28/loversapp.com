@@ -1,3 +1,10 @@
+# [x] You cannot create a relationship with yourself.
+#   http://static.ak.fbcdn.net/rsrc.php/zY/r/wl6KMCh80w9.png
+#     background-position: 0px -59px; height: 11px; width: 11px;
+# We will request confirmation of this relationship from Matt Di Pasquale upon saving.
+# Your changes have been saved.
+# 
+
 Feature: user sends request
 
   As a user

@@ -1,5 +1,6 @@
-require 'redis' # for storing app_users, requests, relationships, etc.
-require 'json'  # for JSON responses
+require 'redis'  # for storing app_users, requests, relationships, etc.
+require 'json'   # for JSON responses
+require 'logger' # for logging errors
 
 # for decoding Facebook signed_request
 require 'openssl'
@@ -31,6 +32,10 @@ module Lovers
     def env
       ENV["RACK_ENV"] || "development"
     end
+
+    def logger
+      @logger ||= Logger.new(STDOUT)
+    end    
   end
 end
 

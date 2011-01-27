@@ -3,8 +3,7 @@ module Lovers
     attr_reader :fb_id #, :access_token, :locale, :signed_request #, etc.
 
     def initialize(fb_id)
-      Integer(@fb_id = fb_id) rescue raise NonAppUser
-      # @access_token = access_token
+      Integer(@fb_id = fb_id) rescue raise NonAppUser.new "fb_id: "+fb_id
     end
  
     # Authenticate the user from a signed_request.
@@ -16,9 +15,9 @@ module Lovers
       if signature == expected_signature
         signed_request = JSON.parse base64_url_decode(encoded_data)
         User.new(signed_request["user_id"]).tap { |u| u.add_app_user }
-      else raise end
-    rescue StandardError => e
-      raise AuthenticationError
+      else raise "expected_signature: " + expected_signature end
+    rescue => e # let's catch all errors?
+      raise AuthenticationError.new "signed_request: #{signed_request} - #{e.inspect}"
     end
 
     def self.auth(*args)

@@ -25,11 +25,12 @@ class Lovers::Server < Sinatra::Base
   set :show_exceptions, false
 
   error do
-    e = request.env['sinatra.error']
-    if e.is_a? Lovers::LoversError
+    begin
+      e = request.env['sinatra.error']
+      Lovers.logger << e.inpsect      
       e.class::CODE
-    else
-      raise e
+    rescue
+      Lovers::UnknownError::CODE
     end
   end
 
