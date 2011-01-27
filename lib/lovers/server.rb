@@ -38,17 +38,31 @@ class Lovers::Server < Sinatra::Base
   # Canvas #####################################################################
   ##############################################################################
 
+  helpers do
+
+    def authurl
+      url    = Rack::Utils.escape("http://apps.facebook.com/#{Lovers::Conf.fb_canvas_name}/")
+      base   = 'https://www.facebook.com/dialog/oauth'
+      params = "?client_id=#{Lovers::Conf.fb_app_id}&redirect_uri=#{url}"
+      "#{base}#{params}"
+    end
+  end
+
+  ##############################################################################
+  # Canvas #####################################################################
+  ##############################################################################
+
   # Initial Facebook request comes in as a POST with a signed_request.
   post '/fb/canvas/' do
     # If we do cache control, I don't think the cookie will get set.
     # cache_control :public, :max_age => 31536000 # seconds (1 year)
     # @fb_app_id = Lovers::Conf.fb_app_id
-    user = Lovers::User.auth(params[:signed_request])
+    if @user = Lovers::User.auth(params[:signed_request])
+      # Remember user for 1 day for future AJAX requests.
+      session["u"], session["t"] = @user.fb_id, Time.now.to_i+86400
+    end
 
-    # Remember user for 1 day for future AJAX requests.
-    session["u"], session["t"] = user.fb_id, Time.now.to_i+86400
-
-    erb :main
+    erb :canvas
   end
 
   post '/fb/deauth' do

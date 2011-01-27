@@ -1,5 +1,5 @@
 Given /^I'm logged in$/ do
-  @user = Lovers::User.auth(LoversTest::SIGNED_REQUEST)
+  @user = Lovers::User.auth!(LoversTest::SIGNED_REQUEST)
   @user.fb_id.should == LoversTest::UID
 end
 
@@ -70,7 +70,7 @@ end
 # user authenticates himself
 
 Given /^I'm (not )?already authenticated$/ do |skip|
-  @user = Lovers::User.auth(LoversTest::SIGNED_REQUEST) unless skip
+  @user = Lovers::User.auth!(LoversTest::SIGNED_REQUEST) unless skip
 end
 
 When /^I go to the canvas page$/ do

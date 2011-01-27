@@ -1,0 +1,8 @@
+<% if @user %>
+  <h1>Welcome, Lover!</h1>
+<% else %>
+  <h1>Welcome to Lovers!</h1>
+  <div id="login" data-authurl="<%= authurl %>">
+    Login!
+  </div>
+<% end %>

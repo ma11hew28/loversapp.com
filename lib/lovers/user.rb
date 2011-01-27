@@ -9,7 +9,7 @@ module Lovers
  
     # Authenticate the user from a signed_request.
     # http://developers.facebook.com/docs/authentication/canvas
-    def self.auth(signed_request)
+    def self.auth!(signed_request)
       encoded_signature, encoded_data = signed_request.split('.')
       signature = base64_url_decode(encoded_signature)
       expected_signature = OpenSSL::HMAC.digest('sha256', Lovers::Conf.fb_app_secret, encoded_data)
@@ -17,8 +17,14 @@ module Lovers
         signed_request = JSON.parse base64_url_decode(encoded_data)
         User.new(signed_request["user_id"]).tap { |u| u.add_app_user }
       else raise end
-    rescue
+    rescue StandardError => e
       raise AuthenticationError
+    end
+
+    def self.auth(*args)
+      auth!(*args)
+    rescue AuthenticationError
+      nil
     end
 
     def add_app_user
