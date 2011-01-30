@@ -31,17 +31,20 @@ module Lovers
 
     def add_req
       now = Time.now.to_i
-      Lovers.redis.zadd(@uc+SENT, now, @rid+"|"+@tid)
-      Lovers.redis.zadd(@tc+RECV, now, @rid+"|"+@uid)
+      Lovers.redis.zadd(@uc+SENT, now, @rpt)
+      Lovers.redis.zadd(@tc+RECV, now, @rpu)
     end
 
     def add_hid
       Lovers.redis.zadd(@tc+HIDN, Time.now.to_i, @rid+"|"+@uid)
     end
 
+    # For each user in couple, store rels in sorted set of tids; rid is SCORE.
+    # Alternative: Use sets of tids and a key (uid:tid) to rid for each couple.
+    # I chose zsets for ease of implementation & speed.
     def add_rel
-      Lovers.redis.sadd(@uc+RELS, @rpt) &&
-      Lovers.redis.sadd(@tc+RELS, @rpu)
+      Lovers.redis.zadd(@uc+RELS, @rid, @tid) &&
+      Lovers.redis.zadd(@tc+RELS, @rid, @uid)
     end
 
     def rem_req
@@ -63,13 +66,18 @@ module Lovers
     end
 
     def rem_rel
-      Lovers.redis.srem(@uc+RELS, @rpt) &&
-      Lovers.redis.srem(@tc+RELS, @rpu)
+      Lovers.redis.zrem(@uc+RELS, @tid) &&
+      Lovers.redis.zrem(@tc+RELS, @uid)
     end
 
     def rel_exists?
-      Lovers.redis.sismember(@uc+RELS, @rpt) &&
-      Lovers.redis.sismember(@tc+RELS, @rpu)
+      Lovers.redis.zscore(@uc+RELS, @tid) &&
+      Lovers.redis.zscore(@tc+RELS, @uid)
+    end
+
+    def rel_exact?
+      @rid == Lovers.redis.zscore(@uc+RELS, @tid) &&
+      @rid == Lovers.redis.zscore(@tc+RELS, @uid)
     end
 
     def hid_exists?

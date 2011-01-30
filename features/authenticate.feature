@@ -1,4 +1,3 @@
-@wip
 Feature: user authenticates himself
 
   As a user

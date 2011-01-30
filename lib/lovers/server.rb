@@ -93,8 +93,8 @@ class Lovers::Server < Sinatra::Base
   # How can we manage requests on Facebook? If we can set a type for each sent
   # request and get & delete them, then we could replace this request code.
   #
-  # Each user has two Redis ordered sets (`reqSent` & `reqRecv`) that store
-  # uids. The SCORE that we order the requests by is `time` (UNIX timestamp).
+  # Each user has two Redis sorted sets (`reqSent` & `reqRecv`) that store uids.
+  # The SCORE that we order the requests by is `time` (UNIX timestamp).
   # The request id (rid) is encoded as number and prepended to the uid. rid|uid
   #
   # E.g., for the user with uid=100, we might have:

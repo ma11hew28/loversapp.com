@@ -43,7 +43,7 @@ When /^I remove a "(\d+)" request from user "(\d+)"$/ do |rid, uid|
   @code = @user.remv_req(rid, uid)
 end
 
-When /^I remove a "(\d+)" relationship from user "(\d+)"$/ do |rid, uid|
+When /^I remove a "(\d+)" relationship with user "(\d+)"$/ do |rid, uid|
   @code = @user.remv_rel(rid, uid)
 end
 

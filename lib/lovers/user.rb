@@ -43,7 +43,7 @@ module Lovers
       # If inverse request exists, delete it and confirm relationship.
       return rel.add_rel ? "2" : "3" if rel.rem_req_inv || rel.rem_hid_inv
 
-      return "3" if rel.rel_exists?
+      return "3" if rel.rel_exact?
 
       rel.add_req ? "1" : "0"
     end
@@ -51,7 +51,7 @@ module Lovers
     def conf_req(rid, uid)
       rel = Rel.new(rid, uid, fb_id)
 
-      return rel.add_rel ? "1" : "2" if rel.rem_req || rel.rem_hid
+      return rel.add_rel ? "1" : "0" if rel.rem_req || rel.rem_hid
 
       return rel.rel_exists? ? "0" : "2"
     end
@@ -62,6 +62,8 @@ module Lovers
       return rel.add_hid ? "1" : "0" if rel.rem_req
 
       return rel.hid_exists? ? "0" : (rel.rel_exists? ? "3" : "2")
+      
+      # return rel.hide ? "1" : "0"
     end
 
     def remv_req(rid, uid)
@@ -93,7 +95,7 @@ module Lovers
     end
 
     def rels
-      Lovers.redis.smembers(fb_id+':'+Rel::RELS)
+      Lovers.redis.zrange(fb_id+':'+Rel::RELS, 0, -1)
     end
 
     private
