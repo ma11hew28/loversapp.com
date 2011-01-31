@@ -23,7 +23,7 @@ module Lovers
     def self.auth(*args)
       auth!(*args)
     rescue AuthenticationError => e
-      Lovers.logger << e.inpsect
+      Lovers.logger << e.inspect
       nil
     end
 

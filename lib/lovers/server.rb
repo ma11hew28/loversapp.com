@@ -31,7 +31,7 @@ class Lovers::Server < Sinatra::Base
   error do
     begin
       e = request.env['sinatra.error']
-      Lovers.logger << e.inpsect
+      Lovers.logger << e.inspect
       e.class::CODE
     rescue
       Lovers::UnknownError::CODE
