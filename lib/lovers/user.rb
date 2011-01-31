@@ -48,6 +48,10 @@ module Lovers
       rel.add_req ? "1" : "0"
     end
 
+    def send_gift(gid, tid)
+      Gift.new(gid, fb_id, tid).add ? "1" : "0"
+    end
+
     def conf_req(rid, uid)
       rel = Rel.new(rid, uid, fb_id)
 
@@ -98,6 +102,14 @@ module Lovers
       Lovers.redis.zrange(fb_id+':'+Rel::RELS, 0, -1)
     end
 
+    def gifts_sent
+      Lovers.redis.zrange(fb_id+':'+Gift::SENT, 0, -1, :with_scores => true)
+    end
+
+    def gifts_recv
+      Lovers.redis.zrange(fb_id+':'+Gift::RECV, 0, -1, :with_scores => true)
+    end
+    
     private
 
     # This should be a method of another class. Maybe a Util class.

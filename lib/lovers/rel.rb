@@ -1,6 +1,5 @@
 module Lovers
   class Rel
-    # Note: relSent are .
     RELS = "rels"    # name.split('::').last.uncapitalize.pluralize
     RECV = "reqRecv"
     SENT = "reqSent" # never shown but may show in the future

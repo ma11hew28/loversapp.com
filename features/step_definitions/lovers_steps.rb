@@ -90,3 +90,19 @@ end
 When /^I click on the Lovers tab$/ do
   puts page.driver.get("/fb/canvas/rels")
 end
+
+Given /^I've sent the following gifts:$/ do |table|
+  table.hashes.each do |g|
+    Lovers::Gift.new(g[:gid], @user.fb_id, g[:uid]).add
+  end
+end
+
+When /^I send a "(\d+)" gift to user "(\d+)"$/ do |gid, uid|
+  @code = @user.send_gift(gid, uid)
+end
+
+Then /^I should have "(\d*)" sent gifts$/ do |num|
+  sum = 0
+  @user.gifts_sent.each_with_index { |s, i| sum += s.to_i if i.odd? }
+  sum.should == num.to_i
+end
