@@ -59,9 +59,10 @@ class Lovers::Server < Sinatra::Base
     if @user = Lovers::User.auth(params[:signed_request])
       # Remember user for 1 day for future AJAX requests.
       session["u"], session["t"] = @user.fb_id, Time.now.to_i+86400
+      erb :canvas
+    else
+      erb :login
     end
-
-    erb :canvas
   end
 
   post '/fb/deauth' do

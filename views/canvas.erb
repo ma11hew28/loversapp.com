@@ -1,8 +1,24 @@
-<% if @user %>
-  <h1>Welcome, Lover!</h1>
-<% else %>
-  <h1>Welcome to Lovers!</h1>
-  <div id="login" data-authurl="<%= authurl %>">
-    Login!
-  </div>
-<% end %>
+<h1>Welcome, Lover!</h1>
+
+<ul id="tabs">
+  <li><a href="#home">Home</a></li>
+  <li><a href="#requests">Requests</a></li>
+  <li><a href="#lovers">Lovers</a></li>
+</ul>
+
+<section id="home">
+</section>
+
+<section id="requests">
+</section>
+
+<section id="lovers">
+  <select id="lover-type">
+    <option value="0">In a relationship</option>
+    <option value="1">Engaged</option>
+    <option value="2">Married</option>
+    <option value="3">It's complicated</option>
+    <option value="4">In an open relationship</option>
+  </select>
+  <a id="lover-add" href="#">Add</a>
+</section>
