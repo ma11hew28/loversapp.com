@@ -2,10 +2,12 @@ var Lovers = {};
 
 (function ($) {
 
-  var $ul_req_pending;
+  var access_token, $ul_req_pending;
 
   // Document ready...
   $(function () {
+
+    access_token = $("body").data("access_token");
 
     $ul_req_pending = $("#requests-pending");
 
@@ -33,10 +35,8 @@ var Lovers = {};
 
     FBInit: function () {
 
-      // Load pending requests.
-      FB.api("/me/apprequests/", function (response) {
+      FB.api("/me/apprequests/?access_token=" + access_token, function (response) {
 
-        console.log(response);
         var $li_sample = $ul_req_pending.find("li:hidden");
 
         if (response.data) {

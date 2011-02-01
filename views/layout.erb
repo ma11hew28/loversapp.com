@@ -7,7 +7,7 @@
   <script src="/javascripts/jquery.min.js"></script>
   <script src="/javascripts/lovers.js"></script>
 </head>
-<body>
+<body data-access_token="<%= Rack::Utils.escape(@user.access_token) %>">
   <div id="fb-root"></div>
   <script>
     window.fbAsyncInit = function() {
@@ -16,7 +16,7 @@
         status: true, // check login status
         // We cannot rely on this cookie being set in an iframe. I found this
         // out because the Graph API was not working in Safari.
-        cookie: true, // enable cookies to allow the server to access the session
+        // cookie: true, // enable cookies to allow the server to access the session
         xfbml:  true, // parse XFBML
         channelUrl: window.location.protocol + '//' + window.location.host + '/fb/canvas/channel.html'
       });

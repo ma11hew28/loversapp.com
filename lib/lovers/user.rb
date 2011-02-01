@@ -1,6 +1,7 @@
 module Lovers
   class User
-    attr_reader :fb_id #, :access_token, :locale, :signed_request #, etc.
+    attr_reader :fb_id #, :locale, :signed_request #, etc.
+    attr_accessor :access_token
 
     def initialize(fb_id)
       Integer(@fb_id = fb_id) rescue raise NonAppUser.new "fb_id: "+fb_id
@@ -14,8 +15,13 @@ module Lovers
       expected_signature = OpenSSL::HMAC.digest('sha256', Lovers::Conf.fb_app_secret, encoded_data)
       if signature == expected_signature
         signed_request = JSON.parse base64_url_decode(encoded_data)
-        User.new(signed_request["user_id"]).tap { |u| u.add_app_user }
-      else raise "expected_signature: " + expected_signature end
+        User.new(signed_request['user_id']).tap do |u|
+          u.add_app_user
+          u.access_token = signed_request['oauth_token']
+        end
+      else
+        raise "expected_signature: " + expected_signature
+      end
     rescue StandardError => e
       raise AuthenticationError.new "signed_request: #{signed_request} - #{e.inspect}"
     end
