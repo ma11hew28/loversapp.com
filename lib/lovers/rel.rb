@@ -1,5 +1,40 @@
 module Lovers
   class Rel
+
+    # TYPES
+    IN_A_RELATIONSHIP = 0
+    ENGAGED = 1
+    MARRIED = 2
+    ITS_COMPLICATED = 3
+    IN_AN_OPEN_RELATIONSHIP = 4
+
+    def self.sign_code(info)
+      Digest::SHA256.hexdigest("#{info}#{Lovers::Conf.rel_secret}")
+    end
+
+    # Given a uid and relationship type, generated a signed relationship code.
+    def self.signed_code_for_user(rtype, uid)
+      info = "#{rtype},#{uid},#{Time.now.to_i}"
+      "#{info}|#{sign_code(info)}"
+    end
+
+    def self.code_hash_for_user(uid)
+      (0..4).collect { |rtype| signed_code_for_user(rtype, uid) }
+    end
+
+    # Given the uid of a user who received a request and the code that she
+    # received, create a new relationship from the original user to this user.
+    def self.create_from_code(tid, code)
+      info, sig = code.split('|')
+      if sig == sign_code(info)
+        rtype, uid, ts = info.split(',')
+        rel = new(rtype, uid, tid)
+        rel if rel.add_rel
+      end
+    end
+
+
+
     RELS = "rels"    # name.split('::').last.uncapitalize.pluralize
     RECV = "reqRecv"
     SENT = "reqSent" # never shown but may show in the future

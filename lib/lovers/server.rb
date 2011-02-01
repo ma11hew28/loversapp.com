@@ -39,11 +39,20 @@ class Lovers::Server < Sinatra::Base
   end
 
   helpers do
-    def authurl
-      url    = Rack::Utils.escape("http://apps.facebook.com/#{Lovers::Conf.fb_canvas_name}/")
+    def canvas_url
+      "http://apps.facebook.com/#{Lovers::Conf.fb_canvas_name}/"
+    end
+
+    def auth_url
+      url    = Rack::Utils.escape(canvas_url)
       base   = 'https://www.facebook.com/dialog/oauth'
       params = "?client_id=#{Lovers::Conf.fb_app_id}&redirect_uri=#{url}"
       "#{base}#{params}"
+    end
+
+    def rel_code(rtype)
+      @code_hash_for_user ||= Lovers::Rel.code_hash_for_user(@user.fb_id)
+      @code_hash_for_user[rtype]
     end
   end
 

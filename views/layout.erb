@@ -14,6 +14,8 @@
       FB.init({
         appId:  "<%= Lovers::Conf.fb_app_id %>",
         status: true, // check login status
+        // We cannot rely on this cookie being set in an iframe. I found this
+        // out because the Graph API was not working in Safari.
         cookie: true, // enable cookies to allow the server to access the session
         xfbml:  true, // parse XFBML
         channelUrl: window.location.protocol + '//' + window.location.host + '/fb/canvas/channel.html'
@@ -25,6 +27,7 @@
           // The user has logged out, and the cookie has been cleared
         }
       });
+      Lovers.FBInit();
     };
 
     (function() {
