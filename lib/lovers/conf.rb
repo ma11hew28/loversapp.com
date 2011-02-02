@@ -11,4 +11,11 @@ module Lovers
       end
     end
   end
+
+  class << self
+    def fb
+      @@fb ||= Facebook::Application.new(
+        Lovers::Conf.fb_app_id, Lovers::Conf.fb_app_secret)
+    end    
+  end    
 end

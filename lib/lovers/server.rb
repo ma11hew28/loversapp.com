@@ -56,6 +56,7 @@ class Lovers::Server < Sinatra::Base
     end
   end
 
+
   ##############################################################################
   # Canvas #####################################################################
   ##############################################################################
@@ -89,6 +90,72 @@ class Lovers::Server < Sinatra::Base
   end
   
 
+  ##############################################################################
+  # Credits ####################################################################
+  ##############################################################################
+
+  # http://developers.facebook.com/docs/creditsapi
+  post '/fb/credits/callback' do
+    request = Lovers.fb.auth!(params[:signed_request])
+
+  end
+  
+# See: https://github.com/facebook/credits-api-sample/blob/master/callback.php
+# // parse signed data
+# $request = parse_signed_request($_REQUEST['signed_request'], $secret);
+# 
+# if ($request == null) {
+#   // handle an unauthenticated request here
+# }
+# 
+# $payload = $request['credits'];
+# 
+# // retrieve all params passed in
+# $func = $_REQUEST['method'];
+# $order_id = $payload['order_id'];
+# 
+# if ($func == 'payments_status_update') {
+#   $status = $payload['status'];
+# 
+#   // write your logic here, determine the state you wanna move to
+#   if ($status == 'placed') {
+#     $next_state = 'settled';
+#     $data['content']['status'] = $next_state;
+#   }
+#   // compose returning data array_change_key_case
+#   $data['content']['order_id'] = $order_id;
+# 
+# } else if ($func == 'payments_get_items') {
+#   // remove escape characters  
+#   $order_info = stripcslashes($payload['order_info']);
+#   $item = json_decode($order_info, true);
+#   $item['price'] = (int)$item['price'];
+# 
+#   // for url fields, if not prefixed by http://, prefix them
+#   $url_key = array('product_url', 'image_url');  
+#   foreach ($url_key as $key) {
+#     if (substr($item[$key], 0, 7) != 'http://') {
+#        $item[$key] = 'http://'.$item[$key];
+#     }
+#   }
+#    
+#   // prefix test-mode
+#   if ($payload['test_mode']) {
+#     $update_keys = array('title', 'description');
+#     foreach ($update_keys as $key) {
+#       $item[$key] = '[Test Mode] '.$item[$key];
+#     }
+#   }
+# 
+#   $data['content'] = array($item);
+# }
+# 
+# // required by api_fetch_response()
+# $data['method'] = $func;
+# 
+# // send data back
+# echo json_encode($data);
+  
   ##############################################################################
   # Share ######################################################################
   ##############################################################################
