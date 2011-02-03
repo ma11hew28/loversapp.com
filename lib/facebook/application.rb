@@ -14,10 +14,10 @@ module Facebook
       if signature == expected_signature
         JSON.parse base64_url_decode(encoded_data)
       else
-        raise AuthenticationError.new "signature: #{signature} != expected_signature: #{expected_signature}"
+        raise AuthenticationError.new "signature: '#{signature}' != expected_signature: '#{expected_signature}'"
       end
     rescue StandardError => e
-      raise AuthenticationError.new "signed_request: #{signed_request} - #{e.inspect}"
+      raise AuthenticationError.new "signed_request: '#{signed_request}' - #{e.inspect}"
     end
 
     protected

@@ -75,8 +75,8 @@ end
 
 When /^I go to the canvas page$/ do
   @cookie = page.driver.post("/fb/canvas/", {
-    'signed_request' => LoversTest::SIGNED_REQUEST
-  }).headers['Set-Cookie'].gsub(/^.*rack.session=(.*?);.*$/, '\1')
+    "signed_request" => LoversTest::SIGNED_REQUEST
+  }).headers["Set-Cookie"].gsub(/^.*rack.session=(.*?);.*$/, "\1")
 end
 
 # Then /^I should be remembered$/ do
@@ -89,6 +89,12 @@ end
 
 When /^I click on the Lovers tab$/ do
   puts page.driver.get("/fb/canvas/rels")
+end
+
+When /^I send an invalid signed_request$/ do
+  @code = page.driver.post("/fb/canvas/", {
+    "signed_request" => "invalid signed request"
+  })
 end
 
 Given /^I've sent the following gifts:$/ do |table|

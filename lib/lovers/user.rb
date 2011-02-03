@@ -15,12 +15,14 @@ module Lovers
         u.add_app_user
         u.access_token = request["oauth_token"]
       end
+    rescue Facebook::AuthenticationError => e
+      raise AuthenticationError.new e.message
     end
 
     def self.auth(*args)
       auth!(*args)
-    rescue Facebook::AuthenticationError => e
-      Lovers.logger << e.inspect
+    rescue AuthenticationError => e
+      Lovers.logger.error e.inspect
       nil
     end
 

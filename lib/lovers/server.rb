@@ -7,6 +7,11 @@ class Lovers::Server < Sinatra::Base
   # Configure ##################################################################
   ##############################################################################
 
+  # This should go in a file outside of ./lib/ since it's special configuration.
+  # I put it in config.ru, but cucumber doesn't load that.
+  require 'logger'
+  Lovers.logger = Logger.new(STDOUT)
+  
   configure :development do
     require 'ruby-debug'
   end
@@ -31,7 +36,7 @@ class Lovers::Server < Sinatra::Base
   error do
     begin
       e = request.env['sinatra.error']
-      Lovers.logger << e.inspect
+      Lovers.logger.error e.inspect
       e.class::CODE
     rescue
       Lovers::UnknownError::CODE
