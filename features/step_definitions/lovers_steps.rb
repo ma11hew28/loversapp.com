@@ -1,66 +1,53 @@
 Given /^I'm logged in$/ do
   @user = Lovers::User.auth!(LoversTest::SIGNED_REQUEST)
-  @user.fb_id.should == LoversTest::UID
+  @user.facebook.user_id.should == LoversTest::UID
 end
 
 Given /^I've sent the following requests:$/ do |table|
   table.hashes.each do |r|
-    Lovers::Rel.new(r[:rid], @user.fb_id, r[:uid]).add_req
+    # Lovers::Relationship.new(r[:rid], @user.facebook.user_id, r[:uid]).add_req
   end
 end
 
 Given /^I've received the following requests:$/ do |table|
   table.hashes.each do |r|
-    Lovers::Rel.new(r[:rid], r[:uid], @user.fb_id).add_req
-  end
-end
-
-Given /^I've hidden the following requests:$/ do |table|
-  table.hashes.each do |r|
-    Lovers::Rel.new(r[:rid], r[:uid], @user.fb_id).add_hid
+    # Lovers::Relationship.new(r[:rid], r[:uid], @user.facebook.user_id).add_req
   end
 end
 
 Given /^I'm in the following relationships:$/ do |table|
   table.hashes.each do |r|
-    Lovers::Rel.new(r[:rid], @user.fb_id, r[:uid]).add_rel
+    Lovers::Relationship.new(r[:rid], @user.facebook.user_id, r[:uid]).save
   end
 end
 
 When /^I send a "(\d+)" request to user "(\d+)"$/ do |rid, uid|
-  @code = @user.send_req(rid, uid)
+  # @code = @user.send_req(rid, uid)
 end
 
-When /^I confirm a "(\d+)" request from user "(\d+)"$/ do |rid, uid|
-  @code = @user.conf_req(rid, uid)
+# How do we mock user_id here?
+When /^I accept request "(\d+)" from user "<uid>"$/ do |request_id, user_id|
+  @code = @user.accept_requests(request_id)
 end
 
-When /^I hide a "(\d+)" request from user "(\d+)"$/ do |rid, uid|
-  @code = @user.hide_req(rid, uid)
-end
-
-When /^I remove a "(\d+)" request from user "(\d+)"$/ do |rid, uid|
-  @code = @user.remv_req(rid, uid)
+When /^I reject a "(\d+)" request from user "(\d+)"$/ do |rid, uid|
+  # @code = @user.remove_request(rid, uid)
 end
 
 When /^I remove a "(\d+)" relationship with user "(\d+)"$/ do |rid, uid|
-  @code = @user.remv_rel(rid, uid)
+  @code = @user.remove_relationship(rid, uid)
 end
 
 Then /^I should have "(\d+)" sent requests?$/ do |num|
-  @user.reqs_sent.count.should == num.to_i
+  # @user.reqs_sent.count.should == num.to_i
 end
 
 Then /^I should have "(\d+)" received requests?$/ do |num|
-  @user.reqs_recv.count.should == num.to_i
-end
-
-Then /^I should have "(\d+)" hidden requests?$/ do |num|
-  @user.reqs_hidn.count.should == num.to_i
+  # @user.reqs_recv.count.should == num.to_i
 end
 
 Then /^I should have "(\d+)" relationships?$/ do |num|
-  @user.rels.count.should == num.to_i
+  @user.relationships.count.should == num.to_i
 end
 
 Then /^the response code should be "(\d+)"$/ do |code|
@@ -76,7 +63,7 @@ end
 When /^I go to the canvas page$/ do
   @cookie = page.driver.post("/fb/canvas/", {
     "signed_request" => LoversTest::SIGNED_REQUEST
-  }).headers["Set-Cookie"].gsub(/^.*rack.session=(.*?);.*$/, "\1")
+  }).headers["Set-Cookie"].gsub(/^.*u=(.*?);.*$/, "\1")
 end
 
 # Then /^I should be remembered$/ do
@@ -84,7 +71,7 @@ end
 # end
 
 Then /^I should be an app user$/ do
-  Lovers.redis.sismember("appUsrs", LoversTest::UID).should be_true
+  Lovers.redis.sismember("users", LoversTest::UID).should be_true
 end
 
 When /^I click on the Lovers tab$/ do
@@ -99,7 +86,7 @@ end
 
 Given /^I've sent the following gifts:$/ do |table|
   table.hashes.each do |g|
-    Lovers::Gift.new(g[:gid], @user.fb_id, g[:uid]).add
+    Lovers::Gift.new(g[:gid], @user.facebook.user_id, g[:uid]).save
   end
 end
 
@@ -109,6 +96,6 @@ end
 
 Then /^I should have "(\d*)" sent gifts$/ do |num|
   sum = 0
-  @user.gifts_sent.each_with_index { |s, i| sum += s.to_i if i.odd? }
+  @user.sent_gifts.each_with_index { |s, i| sum += s.to_i if i.odd? }
   sum.should == num.to_i
 end

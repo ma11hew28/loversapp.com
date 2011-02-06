@@ -7,7 +7,7 @@ module Facebook
   class APIError < FacebookError
   end
 
-  # Raised when signed_request is invalid
+  # Raised when signed_request can't be decoded or is invalid
   class AuthenticationError < FacebookError
   end
 end

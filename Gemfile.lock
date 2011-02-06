@@ -81,7 +81,6 @@ DEPENDENCIES
   bundler (= 1.0.9)
   capybara (= 0.4.1.1)
   cucumber (= 0.10.0)
-  json (= 1.4.6)
   rack (= 1.2.1)
   redis (= 2.1.1)
   rspec (= 2.4.0)
