@@ -4,7 +4,7 @@ module Facebook
 
     attr_reader :id, :secret, :canvas_page
     # http://developers.facebook.com/docs/api => App Login
-    # attr_accessor :access_token # for administrative calls. YAGNI
+    # attr_accessor :access_token # for administrative calls
 
     def initialize(id, secret, name)
       @id = id

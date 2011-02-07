@@ -14,7 +14,7 @@ module Facebook
 
     def api(suffix, params={}, method="GET")
       params[:access_token] = @access_token
-      Facebook.application.get("/#{facebook.user_id}/#{suffix}", params, method)
+      Facebook.get("/#{facebook.user_id}/#{suffix}", params, method)
     end
     alias_method :get, :api
   end

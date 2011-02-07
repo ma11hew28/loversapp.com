@@ -1,6 +1,5 @@
 ENV["RACK_ENV"] = "cucumber"
 
-require "rubygems"
 require "bundler"
 Bundler.setup(:default, :cucumber)
 

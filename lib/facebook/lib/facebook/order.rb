@@ -7,6 +7,7 @@ module Facebook
 
     # GET https://graph.facebook.com/[app id]/payments?status=STATUS&since=SINCE&until=UNTIL&access_token=ACCESS_TOKEN
     def find
+
     end
 
     def save
@@ -14,7 +15,7 @@ module Facebook
     end
 
     def all
-      Lovers.redis.
+
     end
   end
 end

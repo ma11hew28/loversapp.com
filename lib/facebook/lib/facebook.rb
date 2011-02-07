@@ -26,15 +26,15 @@ module Facebook
     protected
 
     def encode_params(params={})
-      params.map { |k, v| "#{k}=#{CGI.escape v}" }.join("&")
+      params.map { |k, v| "#{k}=#{escape v}" }.join("&")
     end
 
-    # # File cgi/util.rb, line 6
-    # def CGI::escape(string)
-    #   string.gsub(/([^ a-zA-Z0-9_.-]+)/) do
-    #     '%' + $1.unpack('H2' * $1.bytesize).join('%').upcase
-    #   end.tr(' ', '+')
-    # end
+    # File cgi/util.rb, line 6
+    def escape(string)
+      string.gsub(/([^ a-zA-Z0-9_.-]+)/) do
+        '%' + $1.unpack('H2' * $1.bytesize).join('%').upcase
+      end.tr(' ', '+')
+    end
   end
 end
 FB = Facebook
