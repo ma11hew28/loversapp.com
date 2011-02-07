@@ -17,9 +17,9 @@ Feature: user authenticates himself
 
   Scenario: subsequent authentication
     Given I'm already authenticated
-    When I click on the Lovers tab
-    Then I should see my lovers
- 
+    When I go to the canvas page
+    Then I should be remembered
+
   Scenario: deauthorize app
     Given I'm an app user
     When I deauthorize the app

@@ -29,8 +29,10 @@ module Facebook
     end
 
     def encode_data(data)
-      encoded_data = base64_url_encode(data.to_json)
-      "#{OpenSSL::HMAC.digest('sha256', @secret, encoded_data)}.#{encoded_data}"
+      encoded_data      = base64_url_encode(data.to_json)
+      encoded_signature = base64_url_encode(
+        OpenSSL::HMAC.digest('sha256', @secret, encoded_data))
+      "#{encoded_signature}.#{encoded_data}"
     end
 
     protected
