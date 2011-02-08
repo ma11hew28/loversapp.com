@@ -2,15 +2,6 @@ require 'sinatra/base'
 require 'erb' # use Erb templates
 
 class Lovers::Application < Sinatra::Base
-  attr_reader :facebook
-
-  def initialize(app=nil)
-    @facebook = Facebook::Application.new(
-      Lovers::Conf.fb_app_id,
-      Lovers::Conf.fb_app_secret,
-      Lovers::Conf.fb_canvas_name)
-    super(app)
-  end
 
   ##############################################################################
   # Configure ##################################################################
@@ -76,7 +67,9 @@ class Lovers::Application < Sinatra::Base
       # This works cause FB POSTs signed_request everytime app loads in browser.
       # On server, however, to limit use of hijacked session, let's verify that
       # cookie is less than 1 day old via session["issued_at"].
-      response.set_cookie "u", value: @user.facebook.cookie, domain: facebook.canvas_page
+      response.set_cookie "u",
+        value:  Lovers.facebook.user_cookie(@user.facebook.user_id),
+        domain: Lovers.facebook.canvas_page
       # Rack provides signed cookies (below) but signs them differently than
       # Facebook. So, I wrote our own methods to sign the cookie like Facebook.
       # use Rack::Session::Cookie, domain: facebook.canvas_page,
@@ -108,7 +101,7 @@ class Lovers::Application < Sinatra::Base
 
   # http://developers.facebook.com/docs/creditsapi
   post "/fb/credits/callback" do
-    credits = Lovers.application.facebook.decode_signed_request!(
+    credits = Lovers.facebook.decode_signed_request!(
       params[:signed_request])["credits"]
     method = params[:method]
     order_id = credits["order_id"]

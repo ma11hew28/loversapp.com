@@ -10,7 +10,6 @@ require 'capybara/cucumber'
 $LOAD_PATH << File.expand_path("../../../lib/lovers/lib", __FILE__) <<
   File.expand_path("../../../lib/facebook/lib", __FILE__)
 require 'lovers'
-Lovers.application = Lovers::Application.new
 
 Capybara.default_driver = :rack_test
-Capybara.app = Lovers.application
+Capybara.app = Lovers::Application

@@ -5,14 +5,6 @@ require 'facebook' # add a Facebook app
 
 module Lovers
   class << self
-    def application
-      @@application ||= nil
-    end
-
-    def application=(application)
-      @@application = application
-    end
-
     def redis
       @@redis ||= if env == "production" || env == "staging"
         uri = URI.parse(ENV["REDISTOGO_URL"])
@@ -28,6 +20,11 @@ module Lovers
       else
         Redis.new(port: ENV["REDIS_PORT"])
       end
+    end
+
+    def facebook
+      @@facebook ||= Facebook.new(Lovers::Conf.fb_app_id,
+        Lovers::Conf.fb_app_secret, Lovers::Conf.fb_canvas_name)
     end
 
     def root

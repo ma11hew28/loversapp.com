@@ -10,7 +10,7 @@ module Lovers
     # Authenticate the user from a signed_request.
     # http://developers.facebook.com/docs/authentication/canvas
     def self.auth!(signed_request)
-      request = Lovers.application.facebook.decode_signed_request!(signed_request)
+      request = Lovers.facebook.decode_signed_request!(signed_request)
       User.create!(request["user_id"], request["oauth_token"])
     rescue Facebook::AuthenticationError => e
       raise AuthenticationError.new e.message

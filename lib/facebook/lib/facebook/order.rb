@@ -1,4 +1,4 @@
-module Facebook
+class Facebook
   # http://developers.facebook.com/docs/creditsapi
   class Order
     def initialize(order_id)

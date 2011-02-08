@@ -1,4 +1,4 @@
-module Facebook
+class Facebook
   # Generic Facebook exception class
   class FacebookError < StandardError
   end
