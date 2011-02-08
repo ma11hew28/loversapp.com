@@ -28,7 +28,7 @@ module Lovers
     end
 
     def root
-      @@root ||= File.expand_path("../../../..", __FILE__)
+      @@root ||= File.expand_path("../..", __FILE__)
     end
 
     def env

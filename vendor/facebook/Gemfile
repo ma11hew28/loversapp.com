@@ -1,0 +1,16 @@
+source :rubygems
+
+gem "bundler", "1.0.10"
+
+group :cucumber do
+  gem "cucumber", "0.10.0"
+  gem "rspec", "2.5.0"
+end
+
+group :development do
+  gem "shotgun", "0.8"
+end
+
+group :development, :cucumber do
+  gem "ruby-debug19", "0.11.6"
+end
