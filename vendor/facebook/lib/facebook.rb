@@ -18,15 +18,15 @@ class Facebook
   # http://developers.facebook.com/docs/api => App Login
   # attr_accessor :access_token # for administrative calls
 
-  def initialize(id, secret, name)
-    @id = id
-    @secret = secret
-    @canvas_page = "#{@@app_root}/#{name}/"
+  def initialize(options={})
+    @id = options[:id]
+    @secret = options[:secret]
+    @canvas_page = "#{@@app_root}/#{options[:canvas_name]}/"
   end
 
   # Facebook sends a signed_requests to authenticate certain requests.
   # http://developers.facebook.com/docs/authentication/signed_request/
-  def decode_signed_request!(signed_request)
+  def decode_signed_request(signed_request)
     encoded_signature, encoded_data = signed_request.split('.')
     signature = base64_url_decode(encoded_signature)
     expected_signature = OpenSSL::HMAC.digest('sha256', @secret, encoded_data)

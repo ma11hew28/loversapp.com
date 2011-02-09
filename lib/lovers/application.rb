@@ -101,7 +101,7 @@ class Lovers::Application < Sinatra::Base
 
   # http://developers.facebook.com/docs/creditsapi
   post "/fb/credits/callback" do
-    credits = Lovers.facebook.decode_signed_request!(
+    credits = Lovers.facebook.decode_signed_request(
       params[:signed_request])["credits"]
     method = params[:method]
     order_id = credits["order_id"]

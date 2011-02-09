@@ -23,8 +23,11 @@ module Lovers
     end
 
     def facebook
-      @@facebook ||= Facebook.new(Lovers::Conf.fb_app_id,
-        Lovers::Conf.fb_app_secret, Lovers::Conf.fb_canvas_name)
+      @@facebook ||= Facebook.new({
+        id: Lovers::Conf.fb_app_id,
+        secret: Lovers::Conf.fb_app_secret,
+        canvas_name: Lovers::Conf.fb_canvas_name
+      })
     end
 
     def root

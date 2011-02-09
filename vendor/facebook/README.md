@@ -7,11 +7,15 @@ Usage:
 
     require 'facebook'
 
-    facebook = Facebook.new("APP_ID", "APP_SECRET", "CANVAS_PAGE_NAME")
+    facebook = Facebook.new({
+      id: "YOUR_APP_ID",
+      secret: "YOUR_APP_SECRET",
+      canvas_name: "YOUR_CANVAS_PAGE_NAME" # apps.facebook.com/{canvas_name}/
+    })
 
 Decode the [signed_request][5] that Facebook POSTs into a Hash.
 
-    request = facebook.decode_signed_request!(params[:signed_request])
+    request = facebook.decode_signed_request(params[:signed_request])
 
 Generate a cookie with which to remember the user.
 

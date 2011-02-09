@@ -1,10 +1,10 @@
 ENV["RACK_ENV"] = "cucumber"
 
-require "bundler"
+require 'bundler'
 Bundler.setup(:default, :cucumber)
 
 require 'ruby-debug'
-require 'rspec-expectations'
 
-$LOAD_PATH << File.expand_path("../../lib", __FILE__)
+$LOAD_PATH << File.expand_path(File.join(
+  File.dirname(__FILE__), "..", "..", "lib"))
 require 'facebook'
