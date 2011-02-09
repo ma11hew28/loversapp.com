@@ -68,8 +68,7 @@ class Lovers::Application < Sinatra::Base
       # On server, however, to limit use of hijacked session, let's verify that
       # cookie is less than 1 day old via session["issued_at"].
       response.set_cookie "u",
-        value:  Lovers.facebook.user_cookie(@user.facebook.user_id),
-        domain: Lovers.facebook.canvas_page
+        value:  Lovers.facebook.user_cookie(@user.facebook.user_id)
       # Rack provides signed cookies (below) but signs them differently than
       # Facebook. So, I wrote our own methods to sign the cookie like Facebook.
       # use Rack::Session::Cookie, domain: facebook.canvas_page,
