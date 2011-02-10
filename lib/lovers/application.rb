@@ -49,6 +49,20 @@ class Lovers::Application < Sinatra::Base
       @code_hash_for_user ||= Lovers::Relationship.code_hash_for_user(@user.facebook.user_id)
       @code_hash_for_user[rtype]
     end
+
+    def user_access_token
+      @user && @user.facebook && @user.facebook.access_token
+    end
+
+    # Make sure the browser only caches the latest version of static files.
+    # Taken from: http://agib.me/edwfXX
+    def versioned_stylesheet(stylesheet)
+      ts_path('stylesheets', "#{stylesheet}.css")
+    end
+
+    def versioned_javascript(js)
+      ts_path('javascripts', "#{js}.js")
+    end
   end
 
 
@@ -182,6 +196,13 @@ class Lovers::Application < Sinatra::Base
     Integer(uid) rescue raise Lovers::TargetIdInvalid
   end
 
+  def ts_path(dir, file)
+    "/#{dir}/#{file}?" + ts_file(dir, file).to_i.to_s
+  end
+
+  def ts_file(dir, file)
+    File.mtime(File.join(Lovers.root, 'public', dir, file))
+  end
   # @staticmethod
   # def base64_url_encode(data):
   #     return base64.urlsafe_b64encode(data).rstrip("=")
