@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <title>Lovers on Facebook</title>
+  <link rel="shortcut icon" href="/favicon.ico">
   <link rel="stylesheet" href="/stylesheets/screen.css" media="screen, projection">
   <script src="/javascripts/create-html5-elements.js"></script>
   <script src="/javascripts/jquery.min.js"></script>
@@ -13,7 +14,7 @@
   <script>
     window.fbAsyncInit = function() {
       FB.init({
-        appId:  "<%= Lovers::Conf.fb_app_id %>",
+        appId:  "<%= Lovers.facebook.id %>",
         status: true, // check login status
         // We cannot rely on this cookie being set in an iframe. I found this
         // out because the Graph API was not working in Safari.

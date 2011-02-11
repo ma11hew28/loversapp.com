@@ -26,7 +26,8 @@ module Lovers
       @@facebook ||= Facebook.new({
         id: Lovers::Conf.fb_app_id,
         secret: Lovers::Conf.fb_app_secret,
-        canvas_name: Lovers::Conf.fb_canvas_name
+        canvas_name: Lovers::Conf.fb_canvas_name,
+        canvas_url: Lovers::Conf.fb_canvas_url
       })
     end
 

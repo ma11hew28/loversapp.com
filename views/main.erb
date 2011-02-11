@@ -1,25 +1,54 @@
-<ul id="tabs">
-  <li><a>Home</a></li>
-  <li><a>Requests</a></li>
-  <li><a>Lovers</a></li>
-</ul>
+<style>
+header, footer, section, article, aside {
+  display: block;
+  overflow: hidden;
+}
+
+aside {
+  float: right;
+}
+
+body {
+  font-family: "lucida grande",tahoma,verdana,arial,sans-serif;
+}
+
+a img {
+  border: none;
+}
+
+header img {
+  float: left;
+}
+
+header h1 {
+}
+
+footer ul {
+
+}
+</style>
+
+<header>
+  <img alt="" src="http://graph.facebook.com/<%= Lovers.facebook.id %>/picture" width="50" height="50">
+  <h1>Lovers: Share the Love</h1>
+</header>
 
 <section id="welcome">
   <p>Lovers allows you to express your love to your friends on Facebook.</p>
-  <div id="features">
-    <h2>Send love to your friends</h2>
-    <img id="send_love" src="/images/notif.png" />
-    <h2>Show your love on your wall and their wall</h2>
-    <img id="show_love" src="/images/mywall.png" />
-    <h2>Have more than one significant other</h2>
-    <img src="/images/infosection.png" />
-    <img id="profile_box" src="/images/profilebox.png" />
+  <ul id="features">
+    <h2>Send love to your friends.</h2>
+    <img src="/images/send-love.png" />
+    <h2>Send gifts to your friends.</h2>
+    <!-- <img src="/images/send-gift.png" /> -->
+    <h2>Add your friends as lovers.</h2>
+    <img src="/images/add-lovers.png" />
+    <img src="/images/multiple-relationships.png" />
   </div>
 
   <!-- <fb:login-button perms="email,offline_access" show-faces="true"></fb:login-button> -->
   <fb:login-button></fb:login-button>
 
-  <p>Although Lovers does not store or share any of your information, you still must "allow" it in
+  <p>Your privacy is 100% protected. Lovers does not store or share any of your information. You still must "allow" it, however, in
   order to send love to your friends. You can always disallow it later from your <a
   href="http://www.facebook.com/editapps.php">Application Settings</a>.</p>
 
@@ -40,6 +69,14 @@
 
 <section id="lovers">
 </section>
+
+<footer>
+  <p>Lovers © 2011</p>
+  <ul>
+    <li><a>About</a></li>
+    <li><a>Privacy</a></li>
+  </ul>
+</footer>
 
 <script>
   /**

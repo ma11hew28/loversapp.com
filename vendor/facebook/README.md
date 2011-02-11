@@ -7,10 +7,12 @@ Usage:
 
     require 'facebook'
 
+    # All options are optional, but id & secret are especially important.
     facebook = Facebook.new({
       id: "YOUR_APP_ID",
       secret: "YOUR_APP_SECRET",
-      canvas_name: "YOUR_CANVAS_PAGE_NAME" # apps.facebook.com/{canvas_name}/
+      canvas_name: "YOUR_CANVAS_PAGE_NAME", # apps.facebook.com/{canvas_name}/
+      canvas_url: "YOUR_CANVAS_URL" # e.g., http://your-app.heroku.com/fb/
     })
 
 Decode the [signed_request][5] that Facebook POSTs into a Hash.

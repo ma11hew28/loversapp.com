@@ -14,7 +14,7 @@ class Facebook
   end
   class << self; alias_method :get, :api; end # works, but is there better way?
 
-  attr_reader :id, :secret, :canvas_page
+  attr_reader :id, :canvas_page, :canvas_url
   # http://developers.facebook.com/docs/api => App Login
   # attr_accessor :access_token # for administrative calls
 
@@ -22,6 +22,7 @@ class Facebook
     @id = options[:id]
     @secret = options[:secret]
     @canvas_page = "#{@@app_root}/#{options[:canvas_name]}/"
+    @canvas_url = options[:canvas_url]
   end
 
   # Facebook sends a signed_requests to authenticate certain requests.

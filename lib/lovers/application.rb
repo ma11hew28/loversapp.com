@@ -18,7 +18,7 @@ class Lovers::Application < Sinatra::Base
 
   before "/fb/canvas/r*" do
     content_type "application/json"
-    @user = Lovers::User.new(session["u"])
+    @user = Lovers::User.auth(request.cookies["u"])
   end
 
   set :show_exceptions, false
@@ -34,14 +34,10 @@ class Lovers::Application < Sinatra::Base
   end
 
   helpers do
-    def canvas_url
-      "http://apps.facebook.com/#{Lovers::Conf.fb_canvas_name}/"
-    end
-
     def auth_url
-      url    = Rack::Utils.escape(canvas_url)
+      url    = Rack::Utils.escape(Lovers.facebook.canvas_page)
       base   = "https://www.facebook.com/dialog/oauth"
-      params = "?client_id=#{Lovers::Conf.fb_app_id}&redirect_uri=#{url}"
+      params = "?client_id=#{Lovers.facebook.id}&redirect_uri=#{url}"
       "#{base}#{params}"
     end
 
@@ -70,6 +66,14 @@ class Lovers::Application < Sinatra::Base
   # Canvas #####################################################################
   ##############################################################################
 
+  # Developement
+  get "/fb/canvas/" do
+    # puts $LOAD_PATH
+    # params[:signed_request] = Facebook::Test::APP_USER[:signed_request]
+    # erb :canvas
+    erb :main
+  end
+
   # Initial Facebook request comes in as a POST with a signed_request.
   post "/fb/canvas/" do
     # If we do cache control, I don't think the cookie will get set.
@@ -86,7 +90,7 @@ class Lovers::Application < Sinatra::Base
       # Rack provides signed cookies (below) but signs them differently than
       # Facebook. So, I wrote our own methods to sign the cookie like Facebook.
       # use Rack::Session::Cookie, domain: facebook.canvas_page,
-      #                            secret: facebook.app_secret
+      #                            secret: facebook.secret
       erb :canvas
     else
       erb :login
