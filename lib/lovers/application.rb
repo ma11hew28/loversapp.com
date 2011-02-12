@@ -72,7 +72,7 @@ class Lovers::Application < Sinatra::Base
     # params[:signed_request] = Facebook::Test::APP_USER[:signed_request]
     @user = User.new("514417")
     erb :canvas
-    # erb :main
+    # erb :login
   end
 
   # Initial Facebook request comes in as a POST with a signed_request.

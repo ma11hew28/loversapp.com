@@ -1,0 +1,27 @@
+header, footer, section, article, aside {
+  display: block;
+  overflow: hidden;
+}
+
+aside {
+  float: right;
+}
+
+body {
+  font-family: "lucida grande",tahoma,verdana,arial,sans-serif;
+}
+
+a img {
+  border: none;
+}
+
+header img {
+  float: left;
+}
+
+header h1 {
+}
+
+footer ul {
+
+}
