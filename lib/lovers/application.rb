@@ -119,6 +119,7 @@ class Lovers::Application < Sinatra::Base
 
   # http://developers.facebook.com/docs/creditsapi
   post "/fb/credits/callback" do
+    debugger
     credits = Lovers.facebook.decode_signed_request(
       params[:signed_request])["credits"]
     method = params[:method]

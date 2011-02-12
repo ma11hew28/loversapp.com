@@ -27,6 +27,11 @@ var Lovers = {};
       var req_data = $(this).closest("li").data("req-data");
     });
     // Ignore lovers behavior.
+
+    // Buy gift.
+    $("#buy-gift").click(function () {
+      Lovers.placeOrder(); return false;
+    });
   });
 
   $.extend(Lovers, {
@@ -50,6 +55,29 @@ var Lovers = {};
           });
         }
       });
+    },
+
+    placeOrder: function() {
+      // Assign an internal ID that points to a database record
+      var order_info = 'abc123';
+
+      // calling the API ...
+      var obj = {
+        method: 'pay',
+        order_info: order_info,
+        purchase_type: 'item'
+      };
+
+      FB.ui(obj, this.callback);
+    },
+
+    callback: function(data) {
+      if (data['order_id']) {
+        return true;
+      } else {
+        //handle errors here
+        return false;
+      }
     }
   });
 })(jQuery);
