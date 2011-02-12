@@ -75,3 +75,13 @@ Lovers 2.0:
 		- Post love to friends & families walls; add Lovers & Valentines
 		- Ask friends & family to post love to their friends walls & add Lovers & Valentines
 		- Hire people to send love & requests to their friends: $0.50/friend? Outsource it?
+
+	Send Gifts:
+		- Add credt logos to images
+		- Add front-end UI
+			- Friend selector
+			- Gifts to select one
+		- On send:
+			- JS Graph feed post
+			- JS Credits API order post
+			- 	

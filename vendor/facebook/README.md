@@ -7,7 +7,7 @@ Usage:
 
     require 'facebook'
 
-    # All options are optional, but id & secret are especially important.
+    # All options are optional, but you should include id & secret.
     facebook = Facebook.new({
       id: "YOUR_APP_ID",
       secret: "YOUR_APP_SECRET",
@@ -28,7 +28,7 @@ Coming soon... send calls to the [Facebook Graph API][6].
     Facebook.api("/514417")   # public info (no access_token required)
     facebook.api("/insights") # app info (uses the app access token)
     user.api("/me")           # user info (uses the user access token)
-    
+
 
   1: https://github.com/facebook/runwithfriends
   2: http://apps.facebook.com/runwithfriends/

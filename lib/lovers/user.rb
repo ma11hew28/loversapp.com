@@ -5,13 +5,16 @@ module Lovers
 
     def initialize(facebook_user_id, facebook_access_token=nil)
       @facebook = Facebook::User.new(facebook_user_id, facebook_access_token)
+    rescue TypeError # user_id is nil, i.e., user is not yet an app user
+    rescue ArgumentError => e # suspicious user_id
+      Lovers.logger.error e.inspect
     end
 
     # Authenticate the user from a signed_request.
     # http://developers.facebook.com/docs/authentication/canvas
     def self.auth!(signed_request)
       request = Lovers.facebook.decode_signed_request(signed_request)
-      User.create!(request["user_id"], request["oauth_token"])
+      User.create(request["user_id"], request["oauth_token"])
     rescue Facebook::AuthenticationError => e
       raise AuthenticationError.new e.message
     end
@@ -23,8 +26,8 @@ module Lovers
       nil
     end
 
-    def self.create!(*args)
-      User.new(*args).tap { |u| u.save }
+    def self.create(*args)
+      User.new(*args).tap { |u| u.save unless u.facebook.nil? }
     end
 
     def save

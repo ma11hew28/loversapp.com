@@ -70,8 +70,9 @@ class Lovers::Application < Sinatra::Base
   get "/fb/canvas/" do
     # puts $LOAD_PATH
     # params[:signed_request] = Facebook::Test::APP_USER[:signed_request]
-    # erb :canvas
-    erb :main
+    @user = User.new("514417")
+    erb :canvas
+    # erb :main
   end
 
   # Initial Facebook request comes in as a POST with a signed_request.
@@ -79,14 +80,14 @@ class Lovers::Application < Sinatra::Base
     # If we do cache control, I don't think the cookie will get set.
     # cache_control :public, max_age: 31536000 # seconds (1 year)
 
-    if @user = Lovers::User.auth(params[:signed_request])
+    unless (@user = Lovers::User.auth(params[:signed_request])).facebook.nil?
       # Remember user for 1 day for future AJAX requests.
       # No expires: cookie lasts til browser closes or user deletes it.
       # This works cause FB POSTs signed_request everytime app loads in browser.
       # On server, however, to limit use of hijacked session, let's verify that
       # cookie is less than 1 day old via session["issued_at"].
       response.set_cookie "u",
-        value:  Lovers.facebook.user_cookie(@user.facebook.user_id)
+        Lovers.facebook.user_cookie(@user.facebook.user_id)
       # Rack provides signed cookies (below) but signs them differently than
       # Facebook. So, I wrote our own methods to sign the cookie like Facebook.
       # use Rack::Session::Cookie, domain: facebook.canvas_page,
@@ -126,27 +127,20 @@ class Lovers::Application < Sinatra::Base
 
     case method
     when "payments_get_itmes"
-      # order_info = credits["order_info"] # key to get item from database
-      response[:content] = [{
-        title: "Rose",
-        description: "Happy Valentine's Day!",
-        price: 10, # 10 credits = $1
-        image_url: "http://www.facebook.com/images/gifts/10.png", # pink rose
-        product_url: "http://www.facebook.com/images/gifts/10.png"
-        # data: 3 # optional; stored on FB & included in order_details
-      }]
-      # cool fb gifts
-      # 10: rose
-      # 13: panties
-      # 16: heart cookie w love written on it with icing
-      # 1000: call me candy heart
+      order = credits["order_info"] # key to get item from database
+      response[:content] = [Lovers::Gift.find(order["gift_id"])]
     when "payments_status_update"
       response[:content] = {}
-      if credits["status"] == "placed"
+      case credits["status"]
+      when "placed", "settled"
         response[:content][:status] = "settled"
+      when "settled"
+        order = credits["order_details"]
+        User.new(order["from_id"]).send_gift(order["gift_id"], order["to_id"])
       end
-      response[:content][:order_id] = order_id;
+      response[:content][:order_id] = order_id
     end
+    response.to_json
   end
 
 
