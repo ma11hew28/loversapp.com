@@ -1,10 +1,11 @@
 <section id="home" data-user_id="<%= @user.facebook.id %>"
   data-access_token="<%= @user.facebook.access_token %>">
-
   <h3>Who do you love?</h3>
   <input id="friend-selector" type="text">
-  <p><a id="send-love">Share</a></p>
+  <p><a class="uiButton uiButtonConfirm" id="send-love">Share</a></p>
+</section>
 
+<section>
   <h3>Send them a gift.</h3>
   <ul id="gifts">
     <li>

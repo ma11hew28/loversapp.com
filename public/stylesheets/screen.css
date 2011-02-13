@@ -103,8 +103,34 @@ footer li + li {
 
 /* Canvas Home */
 
-.fb_iframe_widget {
-  position: absolute;
+input#friend-selector {
+    float: left;
+    font-size: 15px;
+    margin-right: 10px;
+}
+
+.uiButton {
+    -moz-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+    background: url("http://static.ak.fbcdn.net/rsrc.php/zD/r/B4K_BWwP7P5.png") repeat scroll 0 0 #EEEEEE;
+    border-color: #999999 #999999 #888888;
+    border-style: solid;
+    border-width: 1px;
+    cursor: pointer;
+    display: inline-block;
+    font-weight: bold;
+    line-height: normal !important;
+    padding: 2px 6px;
+    text-align: center;
+    text-decoration: none;
+    vertical-align: top;
+    white-space: nowrap;
+}
+
+.uiButtonConfirm {
+  background-color: #5B74A8;
+  background-position: 0 -48px;
+  border-color: #29447E #29447E #1A356E;
+  color: white;
 }
 
 ul#gifts {
@@ -119,3 +145,4 @@ ul#gifts li {
 ul#gifts li + li {
   padding-left: 20px;
 }
+

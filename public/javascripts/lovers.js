@@ -22,10 +22,9 @@ var Lovers = {};
         }
       }
     })();
-    console.log(Lovers);
 
     $("#send-love").click(function () {
-      // Lovers.sendLove(to_id);
+      Lovers.sendLove();
     });
 
     $("#send-gift").click(function () {
@@ -82,18 +81,14 @@ var Lovers = {};
       // FB.api("/2550/feed", "post", {"message": "hey what's up", "access_token": access_token}, function (response) {
       //   console.log(response);
       // });
-    sendLove: function (to_id) {
-      FB.ui({
-        method: "stream.publish",
-        attachment: {
-          caption: "{*actor*} loves you."
-        },
-        action_links: [{
-          text: "Love",
-          href: "http://apps.facebook.com/mylovers/"
-        }],
-        user_message_prompt: "What do you love about them?" // change them to to_id's first name (just take the first word of their full name that we got from graph api)
-      });
+
+    sendLove: function () {
+      console.log(Lovers.to_id);
+      top.location = "http://www.facebook.com/dialog/feed?api_id=" +
+      Lovers.facebook.id + "&to=" + Lovers.to_id + "&redirect_url=" +
+      escape(Lovers.facebook.canvas_page) + "&caption=" +
+      escape("{*actor*} loves you.") + "&actions=" +
+      escape('[{"text":"Love","href":"http://apps.facebook.com/mylovers/"}]');
     },
 
     placeOrder: function () {
