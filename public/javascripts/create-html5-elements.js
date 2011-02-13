@@ -4,6 +4,9 @@
  * Reference: http://remysharp.com/2009/01/07/html5-enabling-script/
  */
 
+document.createElement("header");
+document.createElement("hgroup");
+document.createElement("footer");
 document.createElement("section");
 document.createElement("article");
 document.createElement("aside");

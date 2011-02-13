@@ -31,17 +31,17 @@ module Lovers
     end
 
     def save
-      Lovers.redis.sadd("users", facebook.user_id)
-      Lovers.redis.srem("Users", facebook.user_id)
+      Lovers.redis.sadd("users", facebook.id)
+      Lovers.redis.srem("Users", facebook.id)
     end
 
     def delete
-      Lovers.redis.srem("users", facebook.user_id)
-      Lovers.redis.sadd("alums", facebook.user_id)
+      Lovers.redis.srem("users", facebook.id)
+      Lovers.redis.sadd("alums", facebook.id)
     end
 
     def send_gift(gift_id, to_id)
-      Gift.new(gift_id, facebook.user_id, to_id).save ? "1" : "0"
+      Gift.new(gift_id, facebook.id, to_id).save ? "1" : "0"
     end
 
     # http://developers.facebook.com/docs/reference/dialogs/requests/
@@ -51,14 +51,14 @@ module Lovers
       requests.find_all { |r| request_ids.delete r["id"] }
 
       requests.each do |r|
-        Relationship.create(r["data"], r["from"]["id"], facebook.user_id)
+        Relationship.create(r["data"], r["from"]["id"], facebook.id)
       end
 
       request_ids # not found
     end
 
     def remove_relationship(relationship_id, user_id)
-      rel = Relationship.new(relationship_id, user_id, facebook.user_id)
+      rel = Relationship.new(relationship_id, user_id, facebook.id)
       return rel.delete ? "1" : "0"
     end
 
@@ -67,15 +67,15 @@ module Lovers
     end
 
     def relationships
-      Lovers.redis.zrange(facebook.user_id+':'+Relationship::RELS, 0, -1)
+      Lovers.redis.zrange(facebook.id+':'+Relationship::RELS, 0, -1)
     end
 
     def sent_gifts
-      Lovers.redis.zrange(facebook.user_id+':'+Gift::SENT, 0, -1, with_scores: true)
+      Lovers.redis.zrange(facebook.id+':'+Gift::SENT, 0, -1, with_scores: true)
     end
 
     def received_gifts
-      Lovers.redis.zrange(facebook.user_id+':'+Gift::RECV, 0, -1, with_scores: true)
+      Lovers.redis.zrange(facebook.id+':'+Gift::RECV, 0, -1, with_scores: true)
     end
   end
 end

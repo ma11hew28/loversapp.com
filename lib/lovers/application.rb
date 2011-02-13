@@ -37,7 +37,7 @@ module Lovers
     helpers do
       # def rel_code(rtype)
       #   @code_hash_for_user ||= Relationship.code_hash_for_user(
-      #     @user.facebook.user_id)
+      #     @user.facebook.id)
       #   @code_hash_for_user[rtype]
       # end
 
@@ -62,10 +62,10 @@ module Lovers
     ############################################################################
 
     # Developement
-    get "/fb/canvas/" do
+    get "/about" do
       # puts $LOAD_PATH
       # params[:signed_request] = Facebook::Test::APP_USER[:signed_request]
-      @user = User.new("514417")
+      # @user = User.new("514417")
       # erb :canvas
       erb :login
     end
@@ -86,9 +86,11 @@ module Lovers
         # use Rack::Session::Cookie, domain: facebook.canvas_page,
         #                            secret: facebook.secret
         response.set_cookie "u",
-          Lovers.facebook.user_cookie(@user.facebook.user_id)
+          Lovers.facebook.user_cookie(@user.facebook.id)
+        @class = "canvas"
         erb :canvas
       else
+        @class = "login"
         erb :login
       end
     end
@@ -99,7 +101,7 @@ module Lovers
 
     post "/fb/canvas/admin" do
       user = User.auth!(params[:signed_request])
-      unless Conf.admin_uids.include? user.facebook.user_id
+      unless Conf.admin_uids.include? user.facebook.id
         return redirect "/fb/canvas/"
       end
       @users = Lovers.redis.smembers("users")

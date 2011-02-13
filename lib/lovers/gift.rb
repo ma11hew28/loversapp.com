@@ -41,17 +41,17 @@ module Lovers
       }
     ]
 
-    def self.find(gift_id)
-      GIFTS[gift_id.to_i] # raises TypeError unless gift_id is an Integer
+    def self.find(id)
+      GIFTS[id.to_i] # raises TypeError unless id is an Integer
     end
 
-    def initialize(gift_id, from_id, to_id)
-      @gift_id, @from_id, @to_id = gift_id, from_id, to_id
+    def initialize(id, from_id, to_id)
+      @id, @from_id, @to_id = id, from_id, to_id
     end
 
     def save
-      Lovers.redis.zincrby("#{@from_id}:#{SENT}", 1, "#{@gift_id}|#{@to_id}")
-      Lovers.redis.zincrby("#{@to_id}:#{RECV}", 1, "#{@gift_id}|#{@from_id}")
+      Lovers.redis.zincrby("#{@from_id}:#{SENT}", 1, "#{@id}|#{@to_id}")
+      Lovers.redis.zincrby("#{@to_id}:#{RECV}", 1, "#{@id}|#{@from_id}")
     end
   end
 end

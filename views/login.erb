@@ -1,39 +1,33 @@
 <%# TODO make pretty and add images with feature overview %>
 
 <header>
-  <img alt="" src="http://graph.facebook.com/<%= Lovers.facebook.id %>/picture" width="50" height="50">
+  <img alt="" src="<%= Lovers.host %>/images/lovers-heart-logo.jpg" width="50" height="50">
   <hgroup>
     <h1>Lovers</h1>
     <h2>Share the Love</h2>
   </hgroup>
 </header>
 
-<p>Lovers allows you to express your love to your friends on Facebook.</p>
-<ul id="features">
-  <li>
-    <h3>Send love to your friends.</h3>
-    <img src="/images/send-love.png">
-  </li>
-  <li>
-    <h3>Send gifts to your friends.</h3>
-    <!-- <img src="/images/send-gift.png"> -->
-  </li>
-  <li>
-    <h3>Add your friends as lovers.</h3>
-    <img src="/images/add-lovers.png">
-    <img src="/images/multiple-relationships.png">
-  </li>
-</ul>
+<div>
+  <p>Lovers allows you to express your love to your friends on Facebook.</p>
+  <ul id="features">
+    <li>
+      <h3>Send love to your friends.</h3>
+      <img src="/images/send-love.png">
+    </li>
+    <li>
+      <h3>Send gifts to your friends.</h3>
+      <img src="/images/send-gift.png">
+    </li>
+    <li>
+      <h3>Add your friends as lovers.</h3>
+      <img src="/images/add-lovers.png">
+      <img src="/images/multiple-relationships.png">
+    </li>
+  </ul>
+</div>
 
 <aside>
-  <fb:login-button max-rows="3" show-faces="true" width="200"></fb:login-button>
-  <small>In order to send love to your friends via Lovers, You must authorize the Lovers application to interact with your Facebook account. You can deauthorize Lovers anytime from your <a href="http://www.facebook.com/settings/?tab=applications">Application Settings</a>.</small>
+  <a href="<%= Lovers.facebook.auth_url %>" target="_top"><h3>Get Started</h3></a>
+  <p>To send love to your friends, you must login to Lovers with your Facebook account. You can remove Lovers anytime from your <a href="http://www.facebook.com/settings/?tab=applications">Application Settings</a>. For more details, please view our <a href="/privacy">Privacy Policy</a>.</p>
 </aside>
-
-<footer>
-  <p>Lovers © 2011</p>
-  <ul>
-    <li><a href="/">About</a></li>
-    <li><a href="/privacy">Privacy</a></li>
-  </ul>
-</footer>

@@ -1,4 +1,4 @@
-header, footer, section, article, aside {
+header, hgroup, footer, section, article, aside {
   display: block;
   overflow: hidden;
 }
@@ -12,21 +12,83 @@ img {
   border: none;
 }
 
+small {
+  font-size: 10px
+}
+
 header img {
   float: left;
 }
 
-header h1 {
+header hgroup {
+  margin: 0 0 10px 64px;
+  padding-top: 10px;
+}
+
+header h1, header h2 {
+  display: inline;
+}
+
+.login header h1:after {
+  content: " : ";
+}
+
+.login div {
+  float: left;
+  width: 553px;
+}
+
+.login div ul li img + img {
+  position: absolute;
+}
+
+.login aside {
+  width: 200px;
+}
+
+.login aside > a {
+      background: url("http://static.ak.fbcdn.net/rsrc.php/zL/r/FGFbc80dUKj.png") no-repeat scroll 0 -59px #29447E;
+      display: block;
+      height: 39px;
+      margin-bottom: 16px;
+      padding: 1px 0 0 2px;
+      text-decoration: none;
+}
+
+.login aside a h3 {
+  background: url("http://static.ak.fbcdn.net/rsrc.php/zL/r/FGFbc80dUKj.png") repeat scroll 0 0 #5F78AB;
+  border-bottom: 1px solid #1A356E;
+  border-top: 1px solid #879AC0;
+  color: #FFFFFF;
+  font-family: "lucida grande",tahoma,verdana,arial,sans-serif;
+  font-weight: bold;
+  line-height: 36px;
+  margin: 1px 1px 0 38px;
+  text-align: center;
+}
+
+.login aside p {
+  font-size: 10px;
+}
+
+footer {
+  position: relative;
+  top: 10px;
+  clear: both;
 }
 
 footer p {
   float: left;
 }
 
+footer a {
+  text-decoration: none;
+}
+
 footer ul {
   float: right;
   list-style-type: none;
-  width: 400px;
+  width: 250px;
 }
 
 footer li {

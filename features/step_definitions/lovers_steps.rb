@@ -1,23 +1,23 @@
 Given /^I'm logged in$/ do
   @user = Lovers::User.auth!(LoversTest::SIGNED_REQUEST)
-  @user.facebook.user_id.should eq(LoversTest::UID)
+  @user.facebook.id.should eq(LoversTest::UID)
 end
 
 Given /^I've sent the following requests:$/ do |table|
   table.hashes.each do |r|
-    # Lovers::Relationship.new(r[:rid], @user.facebook.user_id, r[:uid]).add_req
+    # Lovers::Relationship.new(r[:rid], @user.facebook.id, r[:uid]).add_req
   end
 end
 
 Given /^I've received the following requests:$/ do |table|
   table.hashes.each do |r|
-    # Lovers::Relationship.new(r[:rid], r[:uid], @user.facebook.user_id).add_req
+    # Lovers::Relationship.new(r[:rid], r[:uid], @user.facebook.id).add_req
   end
 end
 
 Given /^I'm in the following relationships:$/ do |table|
   table.hashes.each do |r|
-    Lovers::Relationship.new(r[:rid], @user.facebook.user_id, r[:uid]).save
+    Lovers::Relationship.new(r[:rid], @user.facebook.id, r[:uid]).save
   end
 end
 
@@ -68,7 +68,7 @@ When /^I go to the canvas page$/ do
 end
 
 Then /^I should be remembered$/ do
-  Lovers::User.auth!(@cookie).user_id.should eq(LoversTest::UID)
+  Lovers::User.auth!(@cookie).id.should eq(LoversTest::UID)
 end
 
 Then /^I should be an app user$/ do
@@ -87,7 +87,7 @@ end
 
 Given /^I've sent the following gifts:$/ do |table|
   table.hashes.each do |g|
-    Lovers::Gift.new(g[:gid], @user.facebook.user_id, g[:uid]).save
+    Lovers::Gift.new(g[:gid], @user.facebook.id, g[:uid]).save
   end
 end
 

@@ -1,7 +1,4 @@
-<header
-  data-access_token="<%= user_access_token %>"
-  data-auth_url="<%= Lovers.facebook.auth_url %>"
->
+<header>
   <img alt="" src="http://graph.facebook.com/<%= Lovers.facebook.id %>/picture" width="50" height="50">
   <h1>Welcome, Lover!</h1>
   <ul>
@@ -18,24 +15,3 @@
 <p><a id="buy-gift">Buy Gift</a></p>
 </section>
 
-<section id="requests">
-  <ul id="requests-pending">
-    <li style="display:none">
-      <span class="request-name"></span>
-      <span class="request-type"></span>
-      <a class="request-accept" href="#">Accept</a>
-      <a class="request-ignore" href="#">Ignore</a>
-    </li>
-  </ul>
-</section>
-
-<section id="lovers">
-  <select id="lover-type">
-    <option value="<%= rel_code(0) %>">In a relationship</option>
-    <option value="<%= rel_code(1) %>">Engaged</option>
-    <option value="<%= rel_code(2) %>">Married</option>
-    <option value="<%= rel_code(3) %>">It's complicated</option>
-    <option value="<%= rel_code(4) %>">In an open relationship</option>
-  </select>
-  <a id="lover-add" href="#">Add</a>
-</section>

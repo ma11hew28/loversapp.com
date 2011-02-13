@@ -4,45 +4,46 @@
   <meta charset="utf-8">
   <title>Lovers on Facebook</title>
   <link rel="shortcut icon" href="/favicon.ico">
-  <link rel="stylesheet" href="/stylesheets/screen.css" media="screen, projection">
+  <link rel="stylesheet" href="<%= versioned_stylesheet("screen") %>" media="screen, projection">
   <script src="/javascripts/create-html5-elements.js"></script>
   <script src="/javascripts/jquery.min.js"></script>
   <script src="<%= versioned_javascript("lovers") %>"></script>
 </head>
-<body<%= " class=\"#{@class}\"" if @class %>>
+<body<%= " class=\"#{@class}\"" if @class %>
+  data-app_id="<%= Lovers.facebook.id %>"
+  data-canvas_page="<%= Lovers.facebook.canvas_page %>">
+
+  <%= yield %>
+
+  <footer>
+    <p>Lovers © 2011</p>
+    <ul>
+      <li><a href="/about">About</a></li>
+      <li><a href="http://www.facebook.com/settings/?tab=applications" target="_top">Settings</a></li>
+      <li><a href="/privacy">Privacy</a></li>
+    </ul>
+  </footer>
+
   <div id="fb-root"></div>
   <script>
-    window.fbAsyncInit = function() {
-      FB.init({
-        appId:  "<%= Lovers.facebook.id %>",
-        status: true, // check login status
-        // We cannot rely on this cookie being set in an iframe. I found this
-        // out because the Graph API was not working in Safari.
-        // cookie: true, // enable cookies to allow the server to access the session
-        xfbml:  true, // parse XFBML
-        channelUrl: window.location.protocol + "//" + window.location.host + "/fb/canvas/channel.html"
-      });
-      FB.Event.subscribe("auth.sessionChange", function(response) {
-        if (response.session) {
-          // A user has logged in, and a new cookie has been saved
-        } else {
-          // The user has logged out, and the cookie has been cleared
-        }
-      });
-      Lovers.FBInit();
-    };
-
+    window.fbAsyncInit = function() { Lovers.FBInit() };
     (function() {
       var e = document.createElement("script");
       e.src = document.location.protocol + "//connect.facebook.net/en_US/all.js";
       e.async = true;
       document.getElementById("fb-root").appendChild(e);
     }());
+
+    // Google Analytics Tracking Code
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-5668784-2']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
   </script>
-  <script src="/javascripts/main.js"></script>
-
-  <%= yield %>
-
-  <%= erb :ga, layout: false %>
 </body>
 </html>
