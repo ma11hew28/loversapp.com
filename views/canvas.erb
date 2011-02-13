@@ -1,6 +1,9 @@
-<header>
+<header
+  data-access_token="<%= user_access_token %>"
+  data-auth_url="<%= Lovers.facebook.auth_url %>"
+>
   <img alt="" src="http://graph.facebook.com/<%= Lovers.facebook.id %>/picture" width="50" height="50">
-  <h1 data-access_token="<%= user_access_token %>">Welcome, Lover!</h1>
+  <h1>Welcome, Lover!</h1>
   <ul>
     <li><a href="#home">Home</a></li>
     <li><a href="#requests">Requests</a></li>

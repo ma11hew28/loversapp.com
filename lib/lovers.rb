@@ -27,8 +27,12 @@ module Lovers
         id: Lovers::Conf.fb_app_id,
         secret: Lovers::Conf.fb_app_secret,
         canvas_name: Lovers::Conf.fb_canvas_name,
-        canvas_url: Lovers::Conf.fb_canvas_url
+        canvas_url: Lovers::Conf.host + Lovers::Conf.fb_canvas_path
       })
+    end
+
+    def host
+      @@host ||= Lovers::Conf.host
     end
 
     def root

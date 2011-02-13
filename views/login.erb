@@ -2,120 +2,38 @@
 
 <header>
   <img alt="" src="http://graph.facebook.com/<%= Lovers.facebook.id %>/picture" width="50" height="50">
-  <h1>Lovers: Share the Love</h1>
+  <hgroup>
+    <h1>Lovers</h1>
+    <h2>Share the Love</h2>
+  </hgroup>
 </header>
 
-<section id="welcome">
-  <p>Lovers allows you to express your love to your friends on Facebook.</p>
-  <ul id="features">
-    <h2>Send love to your friends.</h2>
-    <img src="/images/send-love.png" />
-    <h2>Send gifts to your friends.</h2>
-    <!-- <img src="/images/send-gift.png" /> -->
-    <h2>Add your friends as lovers.</h2>
-    <img src="/images/add-lovers.png" />
-    <img src="/images/multiple-relationships.png" />
-  </div>
+<p>Lovers allows you to express your love to your friends on Facebook.</p>
+<ul id="features">
+  <li>
+    <h3>Send love to your friends.</h3>
+    <img src="/images/send-love.png">
+  </li>
+  <li>
+    <h3>Send gifts to your friends.</h3>
+    <!-- <img src="/images/send-gift.png"> -->
+  </li>
+  <li>
+    <h3>Add your friends as lovers.</h3>
+    <img src="/images/add-lovers.png">
+    <img src="/images/multiple-relationships.png">
+  </li>
+</ul>
 
-  <!-- <fb:login-button perms="email,offline_access" show-faces="true"></fb:login-button> -->
-  <fb:login-button></fb:login-button>
-
-  <p>Your privacy is 100% protected. Lovers does not store or share any of your information. You still must "allow" it, however, in
-  order to send love to your friends. You can always disallow it later from your <a
-  href="http://www.facebook.com/editapps.php">Application Settings</a>.</p>
-
-  <p id="learn_more"><a href="http://www.facebook.com/apps/application.php?id=50601675619">
-      Learn more about Lovers »</a></p>
-</section>
-
-
-<section id="home">
-  <!-- Render share love publisher --> <!-- Render fan box -->
-  <!-- Render feed w special tag --> <!-- Render t-shirt banner (partner w/ printer) -->
-</section>
-
-
-<section id="requests">
-</section>
-
-
-<section id="lovers">
-</section>
-
-<a href="<%= auth_url %>" target="_top">Get Started</a>
+<aside>
+  <fb:login-button max-rows="3" show-faces="true" width="200"></fb:login-button>
+  <small>In order to send love to your friends via Lovers, You must authorize the Lovers application to interact with your Facebook account. You can deauthorize Lovers anytime from your <a href="http://www.facebook.com/settings/?tab=applications">Application Settings</a>.</small>
+</aside>
 
 <footer>
   <p>Lovers © 2011</p>
   <ul>
-    <li><a>About</a></li>
-    <li><a>Privacy</a></li>
+    <li><a href="/">About</a></li>
+    <li><a href="/privacy">Privacy</a></li>
   </ul>
 </footer>
-
-<script>
-  /**
-   * @namespace LVRS public namespace for Lovers
-   */
-  LVRS = window.LVRS || {};
-
-  LVRS.config = {
-    appId: <%= Lovers::Conf.fb_app_id %>
-  };
-
-  // LVRS.getName = function(uid, callback) {
-  //   LVRS.getProperties(uid, ['name'], callback);
-  // }
-
-  LVRS.getProperties = function(uid, properties, callback) {
-    FB.api('/' + uid + '?fields=' + properties.join(','), callback);
-  }
-
-  LVRS.renderRequest = function(rid, uid) {
-    var article = $("<article>", {
-      "id": uid
-    });
-    // article.append($("<img>")); // http://graph.facebook.com/35/picture
-    // para.append($("<a></a>"))
-    //   <p><a>Matt Di Pasquale</a></p>
-    //   <div><a>Confirm</a><a>Not Now</a></div>
-    // </article>
-    $('#requests').append(article);
-  };
-
-  LVRS.userIterator = function(property, func) {
-    if(!this.user.hasOwnProperty(property))
-      return false;
-
-    var length = this.user[property].length, i;
-    var i;
-    for(i = 0; i < length; i++)
-       func(LVRS.user[property][i]);
-  };
-
-  LVRS.renderRequests = function() {
-    var requests = $("#requests");
-    this.userIterator('reqs', function(obj) {
-      var rid_uid = obj.split("|");
-      LVRS.renderRequest(rid_uid[0], rid_uid[1]);
-    });
-  };
-
-  LVRS.renderRelationships = function() {
-  //   var requests = $("#..");
-  //   this.userIterator('relationships', function(obj) {
-  // //render relationships here...
-  //   });
-  // http://graph.facebook.com/35?fields=name
-  };
-
-  LVRS.bootstrap = function(user) {
-    this.user = user;
-    this.renderRelationships();
-    this.renderRequests();
-  };
-
-  // $(function() {
-  //   FB.Canvas.setAutoResize();
-  //   LVRS.bootstrap(<%#= j @relationships %>);
-  // });
-</script>

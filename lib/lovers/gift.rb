@@ -14,35 +14,35 @@ module Lovers
         title: "Heart",
         description: "Happy Valentine's Day!",
         price: 0,
-        image_url: "http://www.loversapp.com/images/gifts/red-heart.png",
-        product_url: "http://www.loversapp.com/images/gifts/red-heart.png"
+        image_url: "#{Lovers.host}/images/gifts/red-heart.png",
+        product_url: "#{Lovers.host}/images/gifts/red-heart.png"
         # data: 3 # optional; stored on FB & included in order_details
       },
       { # 1
         title: "Red Rose",
         description: "Happy Valentine's Day!",
-        price: 10,
-        image_url: "http://www.loversapp.com/images/gifts/red-rose.png",
-        product_url: "http://www.loversapp.com/images/gifts/red-rose.png"
+        price: 1, # 10
+        image_url: "#{Lovers.host}/images/gifts/red-rose.png",
+        product_url: "#{Lovers.host}/images/gifts/red-rose.png"
       },
       { # 2
         title: "One-Dozen Red Roses",
         description: "Happy Valentine's Day!",
-        price: 99,
-        image_url: "http://www.loversapp.com/images/gifts/dozen-red-roses.png",
-        product_url: "http://www.loversapp.com/images/gifts/dozen-red-roses.png"
+        price: 1, # 99
+        image_url: "#{Lovers.host}/images/gifts/dozen-red-roses.png",
+        product_url: "#{Lovers.host}/images/gifts/dozen-red-roses.png"
       },
       { # 3
         title: "Blue Diamond",
         description: "Happy Valentine's Day!",
-        price: 3304,
-        image_url: "http://www.loversapp.com/images/gifts/blue-diamond.png",
-        product_url: "http://www.loversapp.com/images/gifts/blue-diamond.png"
+        price: 1, # 3304
+        image_url: "#{Lovers.host}/images/gifts/blue-diamond.png",
+        product_url: "#{Lovers.host}/images/gifts/blue-diamond.png"
       }
     ]
 
     def self.find(gift_id)
-      GIFTS[gift_id] # raises TypeError unless gift_id is an Integer
+      GIFTS[gift_id.to_i] # raises TypeError unless gift_id is an Integer
     end
 
     def initialize(gift_id, from_id, to_id)
@@ -50,8 +50,8 @@ module Lovers
     end
 
     def save
-      Lovers.redis.zincrby(@from_id+":"+SENT, 1, @gift_id+"|"+@to_id)
-      Lovers.redis.zincrby(@to_id+":"+RECV, 1, @gift_id+"|"+@from_id)
+      Lovers.redis.zincrby("#{@from_id}:#{SENT}", 1, "#{@gift_id}|#{@to_id}")
+      Lovers.redis.zincrby("#{@to_id}:#{RECV}", 1, "#{@gift_id}|#{@from_id}")
     end
   end
 end

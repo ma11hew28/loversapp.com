@@ -2,7 +2,8 @@ staging:
   fb_app_id:      "234567890"
   fb_app_secret:  "234567891234567890"
   fb_canvas_name: "runwithfriends"
-  fb_canvas_url:  "http://myapp-staging.heroku.com/fb/canvas/"
+  fb_canvas_path: "/fb/canvas/"
+  host:           "http://myapp-staging.heroku.com"
   reln:           6
   admin_uids:     ["123", "456", "789"]
   rel_secret:     "SOME_LONG_SECRET"
@@ -11,7 +12,8 @@ development:
   fb_app_id:      "123456789"
   fb_app_secret:  "123456789123456789"
   fb_canvas_name: "jogwithfriends"
-  fb_canvas_url:  "http://127.0.0.1:9393/fb/canvas/"
+  fb_canvas_path: "/fb/canvas/"
+  host:           "http://127.0.0.1:9393"
   reln:           6
   admin_uids:     ["123", "456", "789"]
   rel_secret:     "SOME_LONG_SECRET"
@@ -20,7 +22,8 @@ cucumber:
   fb_app_id:      "123456789"
   fb_app_secret:  "123456789123456789"
   fb_canvas_name: "jogwithfriends"
-  fb_canvas_url:  "http://127.0.0.1:9393/fb/canvas/"
+  fb_canvas_path: "/fb/canvas/"
+  host:           "http://127.0.0.1:9393"
   reln:           6
   admin_uids:     ["123", "456", "789"]
   rel_secret:     "SOME_LONG_SECRET"

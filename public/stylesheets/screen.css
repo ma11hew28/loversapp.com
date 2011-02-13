@@ -3,15 +3,12 @@ header, footer, section, article, aside {
   overflow: hidden;
 }
 
-aside {
-  float: right;
-}
-
 body {
+  margin: 0;
   font-family: "lucida grande",tahoma,verdana,arial,sans-serif;
 }
 
-a img {
+img {
   border: none;
 }
 
@@ -22,6 +19,21 @@ header img {
 header h1 {
 }
 
-footer ul {
+footer p {
+  float: left;
+}
 
+footer ul {
+  float: right;
+  list-style-type: none;
+  width: 400px;
+}
+
+footer li {
+  float: left;
+  padding: 0 10px;
+}
+
+footer li + li {
+  border-left: solid 1px black;
 }

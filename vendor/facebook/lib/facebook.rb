@@ -25,6 +25,10 @@ class Facebook
     @canvas_url = options[:canvas_url]
   end
 
+  def auth_url
+    @auth_url ||= "https://www.facebook.com/dialog/oauth?client_id=#{Lovers.facebook.id}&redirect_uri=#{Facebook.escape(Lovers.facebook.canvas_page)}"
+  end
+
   # Facebook sends a signed_requests to authenticate certain requests.
   # http://developers.facebook.com/docs/authentication/signed_request/
   def decode_signed_request(signed_request)
