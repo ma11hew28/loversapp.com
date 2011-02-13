@@ -4,14 +4,26 @@
   <meta charset="utf-8">
   <title>Lovers on Facebook</title>
   <link rel="shortcut icon" href="/favicon.ico">
-  <link rel="stylesheet" href="<%= versioned_stylesheet("screen") %>" media="screen, projection">
+  <link rel="stylesheet" href="<%= versioned_stylesheet("screen") %>">
   <script src="/javascripts/create-html5-elements.js"></script>
   <script src="/javascripts/jquery.min.js"></script>
+  <% unless @class == "login" %>
+    <link rel="stylesheet" href="/stylesheets/ui-lightness/jquery-ui.css">
+    <script src="/javascripts/jquery-ui.min.js"></script>
+  <% end %>
   <script src="<%= versioned_javascript("lovers") %>"></script>
 </head>
 <body<%= " class=\"#{@class}\"" if @class %>
   data-app_id="<%= Lovers.facebook.id %>"
   data-canvas_page="<%= Lovers.facebook.canvas_page %>">
+
+  <header>
+    <img alt="" src="<%= Lovers.host %>/images/lovers-heart-logo.jpg" width="50" height="50">
+    <hgroup>
+      <h1>Lovers</h1>
+      <h2>Share the Love</h2>
+    </hgroup>
+  </header>
 
   <%= yield %>
 

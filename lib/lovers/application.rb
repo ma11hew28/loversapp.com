@@ -41,10 +41,6 @@ module Lovers
       #   @code_hash_for_user[rtype]
       # end
 
-      def user_access_token
-        @user.facebook.access_token rescue nil
-      end
-
       # Make sure the browser only caches the latest version of static files.
       # Taken from: http://agib.me/edwfXX
       def versioned_stylesheet(stylesheet)
@@ -67,6 +63,7 @@ module Lovers
       # params[:signed_request] = Facebook::Test::APP_USER[:signed_request]
       # @user = User.new("514417")
       # erb :canvas
+      @class = "login"
       erb :login
     end
 

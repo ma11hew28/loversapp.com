@@ -29,7 +29,7 @@ header h1, header h2 {
   display: inline;
 }
 
-.login header h1:after {
+header h1:after {
   content: " : ";
 }
 
@@ -98,4 +98,24 @@ footer li {
 
 footer li + li {
   border-left: solid 1px black;
+}
+
+
+/* Canvas Home */
+
+.fb_iframe_widget {
+  position: absolute;
+}
+
+ul#gifts {
+  padding-left: 20px;
+  list-style-type: none;
+}
+
+ul#gifts li {
+  float: left;
+}
+
+ul#gifts li + li {
+  padding-left: 20px;
 }

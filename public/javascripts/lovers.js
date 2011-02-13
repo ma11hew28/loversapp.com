@@ -7,25 +7,33 @@ var Lovers = {};
     Lovers.facebook = {
       id: $("body[data-app_id]").data("app_id"),
       canvas_page: $("body[data-canvas_page]").data("canvas_page")
-      // auth_url: $("*[data-auth_url]").data("auth_url")
+      // auth_url: $("body[data-auth_url]").data("auth_url")
     };
 
     // Set Lovers.user if logged in.
-    (function() {
-      var user_id_data = $("body[data-user_id]");
-      if (user_id_data) {
+    (function () {
+      var user_data = $("#home");
+      if (user_data) {
         Lovers.user = {
           facebook: {
-            id: user_id_data.data("user_id"),
-            access_token: $("*[data-access_token]").data("access_token")
+            id: user_data.data("user_id"),
+            access_token: user_data.data("access_token")
           }
         }
       }
     })();
+    console.log(Lovers);
 
-    // Buy gift.
-    $("#buy-gift").click(function () {
-      Lovers.placeOrder();
+    $("#send-love").click(function () {
+      // Lovers.sendLove(to_id);
+    });
+
+    $("#send-gift").click(function () {
+      if (true) { // gift_id != 0
+        Lovers.placeOrder();
+      } else { // gift_id == 0 // it's free; no order necessary
+        // Lovers.sendGift(gift_id, to_id); // post gift to wall
+      }
     });
   });
 
@@ -38,7 +46,31 @@ var Lovers = {};
       });
       FB.Canvas.setAutoResize();
       // Ensure we're on apps.facebook.com.
-      if (window == top) { top.location = Lovers.facebook.canvas_page; }
+      if (window == top) { top.location = this.facebook.canvas_page; }
+
+      if (this.user) {
+        FB.api("/me/friends?access_token=" + this.user.facebook.access_token, function (friends) {
+          console.log(friends);
+          var friend_selector = $("#friend-selector" )
+          friend_selector.autocomplete({
+            source: Lovers.sourceFromFriends(friends.data),
+            select: function (event, ui) {
+              friend_selector.val(ui.item.label);
+              Lovers.to_id = ui.item.value;
+              return false;
+            },
+            focus: function (event, ui) {
+              friend_selector.val(ui.item.label);
+              Lovers.to_id = ui.item.value;
+              return false;
+            }
+            // source: function (request, response) {
+            //   var term = request.term;
+            //   response({lable: "", value: ""});
+            // }
+          });
+        });
+      }
     },
 
       // link=http://developers.facebook.com/docs/reference/dialogs/&
@@ -50,8 +82,21 @@ var Lovers = {};
       // FB.api("/2550/feed", "post", {"message": "hey what's up", "access_token": access_token}, function (response) {
       //   console.log(response);
       // });
+    sendLove: function (to_id) {
+      FB.ui({
+        method: "stream.publish",
+        attachment: {
+          caption: "{*actor*} loves you."
+        },
+        action_links: [{
+          text: "Love",
+          href: "http://apps.facebook.com/mylovers/"
+        }],
+        user_message_prompt: "What do you love about them?" // change them to to_id's first name (just take the first word of their full name that we got from graph api)
+      });
+    },
 
-    placeOrder: function() {
+    placeOrder: function () {
       // Assign an internal ID that points to a database record
       var order_info = {"gift_id": 1, "to_id": 2550}; // send rose to Aaron
 
@@ -65,17 +110,39 @@ var Lovers = {};
       FB.ui(obj, this.callback);
     },
 
-    callback: function(data) {
-      // console.log(data);
+    callback: function (data) {
       if (data['order_id']) {
-
         var url_with_token = "/me/apprequests/?access_token=" + access_token;
-
+        FB.ui({
+          method: "stream.publish",
+          attachment: {
+            name: "Gift name",
+            caption: "Happy Valentine's Day!",
+            media: [{
+              type: "image",
+              href: "http://apps.facebook.com/mylovers/",
+              src: "http://runwithfriends.appspot.com/images/gifts/gift-img.png"
+            }]
+          },
+          action_links: [{
+            text: "Love",
+            href: "http://apps.facebook.com/mylovers/"
+          }],
+          user_message_prompt: "Wish your friend a great Valentine's Day!"
+        });
         return true;
       } else {
         //handle errors here
         return false;
       }
+    },
+
+    sourceFromFriends: function (friends) {
+      var source = [];
+      $.each(friends, function (index, friend) {
+        source[index] = {label: friend.name, value: friend.id}
+      });
+      return source;
     }
   });
 })(jQuery);

@@ -1,17 +1,38 @@
-<header>
-  <img alt="" src="http://graph.facebook.com/<%= Lovers.facebook.id %>/picture" width="50" height="50">
-  <h1>Welcome, Lover!</h1>
-  <ul>
-    <li><a href="#home">Home</a></li>
-    <li><a href="#requests">Requests</a></li>
-    <li><a href="#lovers">Lovers</a></li>
+<section id="home" data-user_id="<%= @user.facebook.id %>"
+  data-access_token="<%= @user.facebook.access_token %>">
+
+  <h3>Who do you love?</h3>
+  <input id="friend-selector" type="text">
+  <p><a id="send-love">Share</a></p>
+
+  <h3>Send them a gift.</h3>
+  <ul id="gifts">
+    <li>
+      <input id="gift_0" type="radio" name="gift_id" value="0">
+      <label for="gift_0"><img src="/images/gifts/red-heart.png"></label>
+      <p>Heart</p>
+      <p>Free!</p>
+    </li>
+    <li>
+      <input id="gift_1" type="radio" name="gift_id" value="1">
+      <label for="gift_1"><img src="/images/gifts/red-rose.png"></label>
+      <p>Red Rose</p>
+      <p>10 <img src="/images/facebook-credit.png"></p>
+    </li>
+    <li>
+      <input id="gift_2" type="radio" name="gift_id" value="3">
+      <label for="gift_2"><img src="/images/gifts/dozen-red-roses.png"></label>
+      <p>Red Rose</p>
+      <!-- <p style="text-decoration:line-through">120 credits</p> -->
+      <p>99 <img src="/images/facebook-credit.png"><!-- <em>Sale!</em> --></p>
+    </li>
+    <li>
+      <input id="gift_3" type="radio" name="gift_id" value="3">
+      <label for="gift_3"><img src="/images/gifts/blue-diamond.png"></label>
+      <p>Blue Diamond</p>
+      <p>3,304 <img src="/images/facebook-credit.png"></p>
+    </li>
   </ul>
-</header>
-
-<section id="home">
-</section>
-
-<section id="gifts">
-<p><a id="buy-gift">Buy Gift</a></p>
+  <p><a id="send-gift">Buy Gift</a></p>
 </section>
 
