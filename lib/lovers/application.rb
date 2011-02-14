@@ -1,5 +1,6 @@
 require 'sinatra/base'
-require 'erb' # use Erb templates
+require 'erb'          # use Erb templates
+require 'rdiscount'    # use markdown temlpates
 
 module Lovers
   class Application < Sinatra::Base
@@ -61,12 +62,15 @@ module Lovers
     # Canvas ###################################################################
     ############################################################################
 
-    # Developement
     get "/about" do
       # @user = User.new("514417")
       # erb :canvas
       @class = "login"
       erb :login
+    end
+
+    get "/privacy" do
+      markdown :privacy
     end
 
     # Initial Facebook request comes in as a POST with a signed_request.

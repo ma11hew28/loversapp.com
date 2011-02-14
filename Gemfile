@@ -4,6 +4,7 @@ gem "bundler", "1.0.10"
 gem "sinatra", "1.1.2"
 gem "rack", "1.2.1"
 gem "redis", "2.1.1"
+gem "rdiscount", "1.6.8"
 gem "settingslogic", "2.0.6"
 
 group :cucumber do
