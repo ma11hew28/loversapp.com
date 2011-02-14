@@ -115,14 +115,17 @@ input#friend-selector {
 
 .mark {
   font-style: italic;
+  color: orange;
 }
 
 .uiButton {
     -moz-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+    -webkit-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
     background: url("http://static.ak.fbcdn.net/rsrc.php/zD/r/B4K_BWwP7P5.png") repeat scroll 0 0 #EEEEEE;
     border-color: #999999 #999999 #888888;
     border-style: solid;
     border-width: 1px;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
     cursor: pointer;
     display: inline-block;
     font-weight: bold;

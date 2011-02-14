@@ -59,8 +59,6 @@ module Lovers
 
     # Developement
     get "/about" do
-      # puts $LOAD_PATH
-      # params[:signed_request] = Facebook::Test::APP_USER[:signed_request]
       # @user = User.new("514417")
       # erb :canvas
       @class = "login"
@@ -131,8 +129,9 @@ module Lovers
       puts "METHOD: " + method
       case method
       when "payments_get_items"
-        order = JSON.parse credits["order_info"] # key to get item from database
-        gift = Gift.find(order["gift_id"])
+        order = JSON.parse credits["order_info"]
+        gift = Gift.find(order["gift_id"]) # gift_id must be integer
+        raise "to_id must be integer" unless Integer(order["to_id"])
         gift["data"] = order["to_id"]
         response[:content] = [gift]
         # response[:receiver] = order["to_id"]
