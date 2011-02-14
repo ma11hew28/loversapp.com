@@ -1,7 +1,7 @@
 Privacy Policy
 --------------
 
-Date of last revision: April 16, 2010.
+Date of last revision: February 14, 2010.
 
 *Application*: the Lovers application on Facebook
 

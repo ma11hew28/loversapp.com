@@ -46,7 +46,7 @@ var Lovers = {};
           "redirect_uri": Lovers.facebook.canvas_page,
           "to": Lovers.order_info.to_id,
           "link": "http://apps.facebook.com/mylovers/",
-          "picture": "http://www.loversapp.com" + giftSource,
+          "picture": this.host + giftSource,
           "name": giftName,
           "caption": "Happy Valentine's Day!",
           "description": "Wishing you a sweet & loving Valentine's Day.",
@@ -134,11 +134,12 @@ var Lovers = {};
   });
 
   $.extend(Lovers, {
+    host: window.location.protocol + "//" + window.location.host,
     FBInit: function () {
       FB.init({
         appId:  Lovers.facebook.id,
         xfbml:  true, // parse XFBML
-        channelUrl: window.location.protocol + "//" + window.location.host + "/fb/canvas/channel.html"
+        channelUrl: this.host + "/fb/canvas/channel.html"
       });
       FB.Canvas.setAutoResize();
       // Ensure we're on apps.facebook.com.
