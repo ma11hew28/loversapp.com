@@ -8,8 +8,12 @@ module Lovers
     # Configure ################################################################
     ############################################################################
 
+    set :root, Lovers.root
+
     # We should set logger in a config file outside of ./lib/.
     # I put it in config.ru, but cucumber doesn't load that.
+    # Maybe we should use Sinatra's logger. See:
+    # http://www.sinatrarb.com/configuration.html
     require 'logger'
     Lovers.logger = Logger.new(STDOUT)
 
