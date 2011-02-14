@@ -84,18 +84,16 @@ var Lovers = {};
           purchase_type: "item"
         };
 
-        FB.ui(obj, this.callback);
-      },
-
-      callback: function (data) {
-        if (data["order_id"]) {
-          this.sendGift(this.order_info.gift_id, this.order_info.to_id);
-          return true;
-        } else {
-          // handle errors here
-          return false;
-        }
-      },
+        FB.ui(obj, function(data) {
+          if (data["order_id"]) {
+            Lovers.sendGift(Lovers.order_info.gift_id, Lovers.order_info.to_id);
+            return true;
+          } else {
+            // handle errors here
+            return false;
+          }
+        });
+      }
     });
 
     // Set Lovers.user if logged in.
