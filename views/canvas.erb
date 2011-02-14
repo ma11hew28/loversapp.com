@@ -1,13 +1,13 @@
-<section id="home" data-user_id="<%= @user.facebook.id %>"
+<section id="send-love" data-user_id="<%= @user.facebook.id %>"
   data-access_token="<%= @user.facebook.access_token %>">
   <h3>Who do you love?</h3>
-  <input id="friend-selector" type="text">
-  <p><a class="uiButton uiButtonConfirm" id="send-love">Share</a></p>
+  <input class="placeholder" id="friend-selector" type="text" value="Start typing a friend's name">
+  <p><a class="uiButton uiButtonConfirm">Share</a></p>
 </section>
 
-<section>
-  <h3>Send them a gift.</h3>
-  <ul id="gifts">
+<section id="send-gift">
+  <h3>Send <span id="them">them</span> a gift.</h3>
+  <ul>
     <li>
       <input id="gift_0" type="radio" name="gift_id" value="0">
       <label for="gift_0"><img src="/images/gifts/red-heart.png"></label>
@@ -34,6 +34,6 @@
       <p>3,304 <img src="/images/facebook-credit.png"></p>
     </li>
   </ul>
-  <p><a id="send-gift">Buy Gift</a></p>
+  <p><a class="uiButton uiButtonConfirm">Send Gift</a></p>
 </section>
 

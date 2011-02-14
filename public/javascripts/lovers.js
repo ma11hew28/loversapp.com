@@ -2,6 +2,15 @@ var Lovers = {};
 
 (function ($) {
 
+  var generateDialogUrl = function (dialog, params) {
+    base  = "http://www.facebook.com/dialog/" + dialog + "?";
+    tail = [];
+    $.each(params, function(key, value) {
+      tail.push(key + "=" + encodeURIComponent(value));
+    })
+    return base + tail.join("&");
+  }
+
   // Document ready...
   $(function () {
     Lovers.facebook = {
@@ -12,22 +21,35 @@ var Lovers = {};
 
     // Set Lovers.user if logged in.
     (function () {
-      var user_data = $("#home");
+      var user_data = $("#send-love");
       if (user_data) {
         Lovers.user = {
           facebook: {
             id: user_data.data("user_id"),
             access_token: user_data.data("access_token")
           }
-        }
+        };
+
+        // I couldn't get caption to work below. I don't think they allow a caption w/o a link.
+        // // Get first_name for caption in feed posts.
+        // FB.api("/me?fields=first_name&access_token=" + Lovers.user.facebook.access_token, function(response) {
+        //   Lovers.user.facebook.first_name = response["first_name"];
+        // });
       }
     })();
 
-    $("#send-love").click(function () {
+    $("#friend-selector").focus(function () {
+      if (!Lovers.started_typing) {
+        $(this).val("").removeClass("placeholder");
+        Lovers.started_typing = true;
+      }
+    });
+
+    $("#send-love .uiButtonConfirm").click(function () {
       Lovers.sendLove();
     });
 
-    $("#send-gift").click(function () {
+    $("#send-gift .uiButtonConfirm").click(function () {
       if (true) { // gift_id != 0
         Lovers.placeOrder();
       } else { // gift_id == 0 // it's free; no order necessary
@@ -49,13 +71,13 @@ var Lovers = {};
 
       if (this.user) {
         FB.api("/me/friends?access_token=" + this.user.facebook.access_token, function (friends) {
-          console.log(friends);
-          var friend_selector = $("#friend-selector" )
+          var friend_selector = $("#friend-selector")
           friend_selector.autocomplete({
             source: Lovers.sourceFromFriends(friends.data),
             select: function (event, ui) {
               friend_selector.val(ui.item.label);
               Lovers.to_id = ui.item.value;
+              $("#them").html(ui.item.label).addClass("mark")
               return false;
             },
             focus: function (event, ui) {
@@ -63,32 +85,18 @@ var Lovers = {};
               Lovers.to_id = ui.item.value;
               return false;
             }
-            // source: function (request, response) {
-            //   var term = request.term;
-            //   response({lable: "", value: ""});
-            // }
           });
         });
       }
     },
 
-      // link=http://developers.facebook.com/docs/reference/dialogs/&
-      // picture=http://fbrell.com/f8.jpg&
-      // name=Facebook%20Dialogs&
-      // caption=Reference%20Documentation&
-      // description=Dialogs%20provide%20a%20simple,%20consistent%20interface%20for%20applications%20to%20interact%20with%20users.&
-      // message=Facebook%20Dialogs%20are%20so%20easy!
-      // FB.api("/2550/feed", "post", {"message": "hey what's up", "access_token": access_token}, function (response) {
-      //   console.log(response);
-      // });
-
     sendLove: function () {
-      console.log(Lovers.to_id);
-      top.location = "http://www.facebook.com/dialog/feed?api_id=" +
-      Lovers.facebook.id + "&to=" + Lovers.to_id + "&redirect_url=" +
-      escape(Lovers.facebook.canvas_page) + "&caption=" +
-      escape("{*actor*} loves you.") + "&actions=" +
-      escape('[{"text":"Love","href":"http://apps.facebook.com/mylovers/"}]');
+      top.location = generateDialogUrl("feed", {
+        "app_id": Lovers.facebook.id,
+        "redirect_uri": Lovers.facebook.canvas_page,
+        "to": Lovers.to_id,
+        "actions": '[{"name":"Love","link":"http://apps.facebook.com/mylovers/"}]'
+      });
     },
 
     placeOrder: function () {

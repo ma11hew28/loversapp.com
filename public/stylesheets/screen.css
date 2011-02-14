@@ -109,6 +109,14 @@ input#friend-selector {
     margin-right: 10px;
 }
 
+.placeholder {
+  color: #777;
+}
+
+.mark {
+  font-style: italic;
+}
+
 .uiButton {
     -moz-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
     background: url("http://static.ak.fbcdn.net/rsrc.php/zD/r/B4K_BWwP7P5.png") repeat scroll 0 0 #EEEEEE;
@@ -133,16 +141,20 @@ input#friend-selector {
   color: white;
 }
 
-ul#gifts {
+#send-gift ul {
   padding-left: 20px;
   list-style-type: none;
+  overflow: hidden;
 }
 
-ul#gifts li {
+#send-gift ul li {
   float: left;
 }
 
-ul#gifts li + li {
+#send-gift ul li + li {
   padding-left: 20px;
 }
 
+#send-gift a.uiButtonConfirm {
+  margin-left: 400px;
+}
