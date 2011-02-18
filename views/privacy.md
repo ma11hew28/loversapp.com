@@ -1,7 +1,7 @@
 Privacy Policy
 --------------
 
-Date of last revision: February 14, 2010.
+Date of last revision: February 14, 2011.
 
 *Application*: the Lovers application on Facebook
 
@@ -35,10 +35,10 @@ From a privacy perspective, sending love to a friend via Lovers is similar to se
 
 Lovers uses [Redis to Go][5] through [Heroku][6] to store the set of all Lovers User ids and all sent & received gifts for every user.
 
-  [1]: http://apps.facebook.com/mylovers/
+  [1]: https://apps.facebook.com/mylovers/
   [2]: http://www.google.com/analytics/
-  [3]: http://developers.facebook.com/docs/reference/plugins/facepile/
-  [4]: http://www.facebook.com/loversapp
+  [3]: https://developers.facebook.com/docs/reference/plugins/facepile/
+  [4]: https://www.facebook.com/loversapp
   [5]: http://redistogo.com/
   [6]: http://heroku.com/
   

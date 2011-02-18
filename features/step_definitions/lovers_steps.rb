@@ -87,7 +87,7 @@ end
 
 Given /^I've sent the following gifts:$/ do |table|
   table.hashes.each do |g|
-    Lovers::Gift.new(g[:gid], @user.facebook.id, g[:uid]).save
+    @user.send_gift(g[:gid], g[:uid])
   end
 end
 
@@ -99,4 +99,12 @@ Then /^I should have "(\d*)" sent gifts$/ do |num|
   sum = 0
   @user.sent_gifts.each_with_index { |s, i| sum += s.to_i if i.odd? }
   sum.should == num.to_i
+end
+
+Then /^I should have "([^"]*)" points$/ do |pts|
+  @user.points.should equal(Integer(pts))
+end
+
+Then /^user "([^"]*)" should have "([^"]*)" points$/ do |uid, pts|
+  Lovers::User.new(uid).points.should equal(Integer(pts))
 end

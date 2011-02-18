@@ -53,5 +53,14 @@ module Lovers
       Lovers.redis.zincrby("#{@from_id}:#{SENT}", 1, "#{@id}|#{@to_id}")
       Lovers.redis.zincrby("#{@to_id}:#{RECV}", 1, "#{@id}|#{@from_id}")
     end
+
+    def points
+      Gift.find(@id)[:price] + 1
+    end
+
+    def award_points
+      Lovers.redis.zincrby("proactivePoints", points, @from_id)
+      Lovers.redis.zincrby("attractedPoints", points, @to_id)
+    end
   end
 end

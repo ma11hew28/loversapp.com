@@ -45,7 +45,7 @@ var Lovers = {};
           "app_id": Lovers.facebook.id,
           "redirect_uri": Lovers.facebook.canvas_page,
           "to": Lovers.order_info.to_id,
-          "link": "http://apps.facebook.com/mylovers/",
+          "link": "https://apps.facebook.com/mylovers/",
           "picture": this.host + giftSource,
           "name": giftName,
           "caption": "Happy Valentine's Day!",

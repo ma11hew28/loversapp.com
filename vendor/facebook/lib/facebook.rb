@@ -6,7 +6,7 @@ require 'facebook/user'
 
 class Facebook
   GRAPH_DOMAIN = "graph.facebook.com"
-  @@app_root = "http://apps.facebook.com"
+  @@app_root = "https://apps.facebook.com"
 
   def self.api(path, params={}, method="GET")
     params[:method] = method

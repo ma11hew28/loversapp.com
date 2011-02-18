@@ -63,14 +63,19 @@ module Lovers
     ############################################################################
 
     get "/about" do
-      # @user = User.new("514417")
-      # erb :canvas
+      cache_control :public, max_age: 31536000 # seconds (1 year)
       @class = "login"
       erb :login
     end
 
     get "/privacy" do
+      cache_control :public, max_age: 31536000 # seconds (1 year)
       erb :privacy
+    end
+
+    get "/faq" do
+      cache_control :public, max_age: 31536000 # seconds (1 year)
+      erb :faq
     end
 
     # Initial Facebook request comes in as a POST with a signed_request.
@@ -139,7 +144,7 @@ module Lovers
       when "payments_get_items"
         order = JSON.parse credits["order_info"]
         gift = Gift.find(order["gift_id"]) # gift_id must be integer
-        raise "to_id must be integer" unless Integer(order["to_id"])
+        raise "to_id must be an integer" unless Integer(order["to_id"])
         gift["data"] = order["to_id"]
         response[:content] = [gift]
         # response[:receiver] = order["to_id"]

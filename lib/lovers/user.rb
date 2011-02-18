@@ -40,8 +40,11 @@ module Lovers
       Lovers.redis.sadd("alums", facebook.id)
     end
 
+    # Returns number of times this same gift has been sent.
     def send_gift(gift_id, to_id)
-      Gift.new(gift_id, facebook.id, to_id).save ? "1" : "0"
+      gift = Gift.new(gift_id, facebook.id, to_id)
+      gift.award_points
+      gift.save
     end
 
     # http://developers.facebook.com/docs/reference/dialogs/requests/
@@ -76,6 +79,18 @@ module Lovers
 
     def received_gifts
       Lovers.redis.zrange(facebook.id+':'+Gift::RECV, 0, -1, with_scores: true)
+    end
+
+    def points
+      proactive_points + attracted_points
+    end
+
+    def proactive_points
+      Integer(Lovers.redis.zscore("proactivePoints", facebook.id) || "0")
+    end
+
+    def attracted_points
+      Integer(Lovers.redis.zscore("attractedPoints", facebook.id) || "0")
     end
   end
 end
