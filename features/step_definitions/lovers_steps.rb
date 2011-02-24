@@ -95,16 +95,49 @@ When /^I send a "(\d+)" gift to user "(\d+)"$/ do |gid, uid|
   @code = @user.send_gift(gid, uid)
 end
 
-Then /^I should have "(\d*)" sent gifts$/ do |num|
-  sum = 0
-  @user.sent_gifts.each_with_index { |s, i| sum += s.to_i if i.odd? }
-  sum.should == num.to_i
+Then /^I should have "(\d*)" sent gifts$/ do |sent|
+  @user.sent_gifts_count
 end
 
-Then /^I should have "([^"]*)" points$/ do |pts|
+Given /^user "(\d*)" has sent gift "(\d*)" to user "(\d*)"$/ do |uid, gid, tid|
+  Lovers::User.new(uid).send_gift(gid, tid)
+end
+
+Then /^user "(\d*)" should have "(\d*)" sent gifts$/ do |uid, sent|
+  Lovers::User.new(uid).sent_gifts_count.should equal(Integer(sent))
+end
+
+Then /^user "(\d*)" should have "(\d*)" received gifts$/ do |uid, recv|
+  Lovers::User.new(uid).received_gifts_count.should equal(Integer(recv))
+end
+
+Then /^I should have "(\d*)" points$/ do |pts|
   @user.points.should equal(Integer(pts))
 end
 
-Then /^user "([^"]*)" should have "([^"]*)" points$/ do |uid, pts|
+Then /^user "(\d*)" should have "(\d*)" points$/ do |uid, pts|
   Lovers::User.new(uid).points.should equal(Integer(pts))
 end
+
+Then /^user "(\d*)" should have "(\d*)" proactive points$/ do |uid, pts|
+  Lovers::User.new(uid).proactive_points.should equal(Integer(pts))
+end
+
+Then /^user "(\d*)" should have "(\d*)" attracted points$/ do |uid, pts|
+  Lovers::User.new(uid).attracted_points.should equal(Integer(pts))
+end
+
+Given /^the following gifts have been sent:$/ do |table|
+  table.hashes.each do |g|
+    Lovers::User.new(g[:uid]).send_gift(g[:gid], g[:tid])
+  end
+end
+
+When /^the points are calculated$/ do
+  Lovers::User.calculate_points
+end
+
+# Then /^the points should be:$/ do |table|
+#   # table is a Cucumber::Ast::Table
+#   pending # express the regexp above with the code you wish you had
+# end

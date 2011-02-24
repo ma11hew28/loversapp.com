@@ -45,17 +45,17 @@ module Lovers
       GIFTS[Integer(id)] # raises TypeError unless id is an Integer
     end
 
-    def initialize(id, from_id, to_id)
+    def initialize(id, from_id=nil, to_id=nil)
       @id, @from_id, @to_id = id, from_id, to_id
     end
 
-    def save
+    def send
       Lovers.redis.zincrby("#{@from_id}:#{SENT}", 1, "#{@id}|#{@to_id}")
       Lovers.redis.zincrby("#{@to_id}:#{RECV}", 1, "#{@id}|#{@from_id}")
     end
 
     def points
-      Gift.find(@id)[:price] + 1
+      @points ||= Gift.find(@id)[:price] + 1
     end
 
     def award_points

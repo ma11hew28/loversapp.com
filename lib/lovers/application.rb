@@ -112,7 +112,7 @@ module Lovers
       unless Conf.admin_uids.include? user.facebook.id
         return redirect "/fb/canvas/"
       end
-      @users = Lovers.redis.smembers("users")
+      @users = Lovers.redis.users
       @alums = Lovers.redis.smembers("alums")
       erb :admin, layout: false
     end

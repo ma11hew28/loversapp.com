@@ -1,3 +1,17 @@
+class Array
+  def sum_odds
+    sum = 0; each_with_index { |s, i| sum += Integer(s) if i.odd? }; sum
+  end
+
+  def sum_points
+    sum = 0
+    each_slice(2) do |gid_tid, score|
+      sum += Lovers::Gift.new(gid_tid.split("|").first).points * score.to_i
+    end
+    sum
+  end
+end
+
 module Lovers
   class User
     attr_reader :facebook # account
@@ -40,11 +54,23 @@ module Lovers
       Lovers.redis.sadd("alums", facebook.id)
     end
 
+    def self.users
+      Lovers.redis.smembers("users")
+    end
+
+    def self.calculate_points
+      User.users.each do |u|
+        u.calculate_points
+      end
+    end
+
     # Returns number of times this same gift has been sent.
     def send_gift(gift_id, to_id)
       gift = Gift.new(gift_id, facebook.id, to_id)
+      Lovers.redis.multi
+      gift.send
       gift.award_points
-      gift.save
+      Lovers.redis.exec
     end
 
     # http://developers.facebook.com/docs/reference/dialogs/requests/
@@ -70,27 +96,59 @@ module Lovers
     end
 
     def relationships
-      Lovers.redis.zrange(facebook.id+':'+Relationship::RELS, 0, -1)
+      Lovers.redis.zrange("#{facebook.id}:#{Relationship::RELS}", 0, -1)
     end
 
     def sent_gifts
-      Lovers.redis.zrange(facebook.id+':'+Gift::SENT, 0, -1, with_scores: true)
+      Lovers.redis.zrange("#{facebook.id}:#{Gift::SENT}", 0, -1, with_scores: true)
+    end
+
+    def sent_gifts_count
+      sent_gifts.sum_odds
     end
 
     def received_gifts
-      Lovers.redis.zrange(facebook.id+':'+Gift::RECV, 0, -1, with_scores: true)
+      Lovers.redis.zrange("#{facebook.id}:#{Gift::RECV}", 0, -1, with_scores: true)
+    end
+
+    def received_gifts_count
+      received_gifts.sum_odds
     end
 
     def points
-      proactive_points + attracted_points
+      @points ||= proactive_points + attracted_points
     end
 
     def proactive_points
-      Integer(Lovers.redis.zscore("proactivePoints", facebook.id) || "0")
+      @praactive_points ||= \
+        Integer(Lovers.redis.zscore("proactivePoints", facebook.id) || "0")
     end
 
     def attracted_points
-      Integer(Lovers.redis.zscore("attractedPoints", facebook.id) || "0")
+      @attracted_points ||= \
+        Integer(Lovers.redis.zscore("attractedPoints", facebook.id) || "0")
+    end
+
+    def calculate_points
+      @points = calculate_proactive_points + calculate_attracted_points
+      # points = sent_gifts.sum_points + received_gifts.sum_points
+      # Lovers.redis.zadd("attractedPoints", points, facebook.id)
+    end
+
+    def calculate_proactive_points
+      @proactive_points = sent_gifts.sum_points
+    end
+
+    def calculate_attracted_points
+      @attracted_points = sent_gifts.sum_points
+    end
+
+    def save_proactive_points
+      Lovers.redis.zadd("proactivePoints", @proactive_points, facebook.id)
+    end
+
+    def save_attracted_points
+      Lovers.redis.zadd("attractedPoints", @attracted_points, facebook.id)
     end
   end
 end

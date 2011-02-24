@@ -1,24 +1,44 @@
+@wip
 Feature: user sends gifts to friends
 
   As a user
   I want to send gifts to friends
-  So that I can express my love
+  So that I can express my love and earn points
 
   Background: Logged in
-    Given I'm logged in
-    And I've sent the following gifts:
-      | gid | uid |
-      | 1   | 11  |
+    Given user "3" has sent gift "1" to user "4"
 
   Scenario Outline: send gift and earn points
-    When I send a "<gid>" gift to user "<uid>"
-    Then I should have "<sent>" sent gifts
-    And I should have "<pts>" points
-    And user "<uid>" should have "<pt2>" points
+    Given user "<uid>" has sent gift "<gid>" to user "<tid>"
+    Then user "<uid>" should have "<sent>" sent gifts
+    And user "<tid>" should have "<recv>" received gifts
+    And user "<uid>" should have "<ppts>" proactive points
+    And user "<tid>" should have "<apts>" attracted points
 
     Scenarios: successful gift send
-      | gid | uid | sent | pts  | pt2  |
-      | 0   | 10  | 2    | 12   | 1    |
-      | 1   | 11  | 2    | 22   | 22   |
-      | 2   | 12  | 2    | 111  | 100  |
-      | 3   | 13  | 2    | 3316 | 3305 |
+      | uid | gid | tid | sent | recv | ppts | apts |
+      | 1   | 0   | 2   | 1    | 1    | 1    | 1    |
+      | 1   | 1   | 2   | 1    | 1    | 11   | 11   |
+      | 1   | 2   | 2   | 1    | 1    | 100  | 100  |
+      | 1   | 3   | 2   | 1    | 1    | 3305 | 3305 |
+
+    Scenarios: send and receive more gifts
+      | uid | gid | tid | sent | recv | ppts | apts |
+      | 3   | 0   | 4   | 2    | 2    | 12   | 12   |
+      | 3   | 1   | 4   | 2    | 2    | 22   | 22   |
+      | 3   | 2   | 4   | 2    | 2    | 111  | 111  |
+      | 3   | 3   | 4   | 2    | 2    | 3316 | 3316 |
+
+  Scenario: calculate points
+    Given the following gifts have been sent:
+      | uid | gid | tid |
+      | 1   | 0   | 2   |
+      # | 1   | 1   | 2   |
+      # | 1   | 2   | 2   |
+      # | 1   | 3   | 2   |
+    When the points are calculated
+    And the points are saved
+    Then the points should be:
+      | uid | pts |
+      | 1   | 1   |
+      | 2   | 1   |
