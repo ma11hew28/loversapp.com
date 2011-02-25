@@ -26,7 +26,7 @@ When /^I send a "(\d+)" request to user "(\d+)"$/ do |rid, uid|
 end
 
 # How do we mock user_id here?
-When /^I accept request "(\d+)" from user "<uid>"$/ do |request_id, user_id|
+When /^I accept request "(\d+)"$/ do |request_id|
   @code = @user.accept_requests(request_id)
 end
 
@@ -99,6 +99,12 @@ Then /^I should have "(\d*)" sent gifts$/ do |sent|
   @user.sent_gifts_count
 end
 
+Given /^the following users exist:$/ do |table|
+  table.hashes.each do |u|
+    Lovers::User.new(u[:uid]).save
+  end
+end
+
 Given /^user "(\d*)" has sent gift "(\d*)" to user "(\d*)"$/ do |uid, gid, tid|
   Lovers::User.new(uid).send_gift(gid, tid)
 end
@@ -133,11 +139,22 @@ Given /^the following gifts have been sent:$/ do |table|
   end
 end
 
-When /^the points are calculated$/ do
-  Lovers::User.calculate_points
+When /^the points are calculated & saved for each user$/ do
+  # # This would be nice.
+  # Lovers.users.each do |u|
+  #   u.calculate_points
+  #   u.save_points
+  # end
+  @users = Lovers.users.map do |i|
+    Lovers::User.new(i).tap do |u|
+      u.calculate_points
+      u.save_points
+    end
+  end
 end
 
-# Then /^the points should be:$/ do |table|
-#   # table is a Cucumber::Ast::Table
-#   pending # express the regexp above with the code you wish you had
-# end
+Then /^the points should be:$/ do |table|
+  table.hashes.each do |u|
+    Lovers::User.new(u[:uid]).points.should equal(Integer(u[:pts]))
+  end
+end

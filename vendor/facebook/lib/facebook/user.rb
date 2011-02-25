@@ -9,7 +9,7 @@ class Facebook
 
     def api(suffix, params={}, method="GET")
       params[:access_token] = @access_token
-      Facebook.get("/#{facebook.id}/#{suffix}", params, method)
+      Facebook.get("/#{id}/#{suffix}", params, method)
     end
     alias_method :get, :api
   end

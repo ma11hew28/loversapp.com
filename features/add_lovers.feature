@@ -99,7 +99,7 @@ Feature: user adds friends as lovers
 
 
   Scenario Outline: accept request
-    When I accept request "<req>" from user "<uid>"
+    When I accept request "<req>"
     Then I should have "<recv>" received requests
     And I should have "<rels>" relationships
     And the response code should be "<code>"

@@ -6,7 +6,14 @@ Feature: user sends gifts to friends
   So that I can express my love and earn points
 
   Background: Logged in
-    Given user "3" has sent gift "1" to user "4"
+    # TODO: Should we use fixtures or factories instead?
+    Given the following users exist:
+      | uid |
+      | 1   |
+      | 2   |
+      | 3   |
+      | 4   |
+    And user "3" has sent gift "1" to user "4"
 
   Scenario Outline: send gift and earn points
     Given user "<uid>" has sent gift "<gid>" to user "<tid>"
@@ -36,8 +43,7 @@ Feature: user sends gifts to friends
       # | 1   | 1   | 2   |
       # | 1   | 2   | 2   |
       # | 1   | 3   | 2   |
-    When the points are calculated
-    And the points are saved
+    When the points are calculated & saved for each user
     Then the points should be:
       | uid | pts |
       | 1   | 1   |

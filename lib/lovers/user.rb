@@ -45,23 +45,17 @@ module Lovers
     end
 
     def save
+      Lovers.redis.multi
       Lovers.redis.sadd("users", facebook.id)
-      Lovers.redis.srem("Users", facebook.id)
+      Lovers.redis.srem("alums", facebook.id)
+      Lovers.redis.exec
     end
 
     def delete
+      Lovers.redis.multi
       Lovers.redis.srem("users", facebook.id)
       Lovers.redis.sadd("alums", facebook.id)
-    end
-
-    def self.users
-      Lovers.redis.smembers("users")
-    end
-
-    def self.calculate_points
-      User.users.each do |u|
-        u.calculate_points
-      end
+      Lovers.redis.exec
     end
 
     # Returns number of times this same gift has been sent.
@@ -92,7 +86,7 @@ module Lovers
     end
 
     def requests
-      @requests ||= get("apprequests")
+      @requests ||= facebook.get("apprequests")
     end
 
     def relationships
@@ -141,6 +135,10 @@ module Lovers
 
     def calculate_attracted_points
       @attracted_points = sent_gifts.sum_points
+    end
+
+    def save_points
+      Lovers.redis.zadd("points", @points, facebook.id)
     end
 
     def save_proactive_points

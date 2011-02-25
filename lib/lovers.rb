@@ -31,12 +31,16 @@ module Lovers
       })
     end
 
+    def users
+      Lovers.redis.smembers("users") # don't memoize, dynamic across requests
+    end
+
     def host
       @@host ||= Lovers::Conf.host
     end
 
     def root
-      @@root ||= File.expand_path("../..", __FILE__)
+      @@root ||= File.expand_path(File.join("..", ".."), __FILE__)
     end
 
     def env
