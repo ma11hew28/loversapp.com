@@ -33,7 +33,7 @@ var Lovers = {};
           "app_id": Lovers.facebook.id,
           "redirect_uri": Lovers.facebook.canvas_page,
           "to": Lovers.to_id,
-          "actions": '[{"name":"Love","link":"http://apps.facebook.com/mylovers/"}]'
+          "actions": '[{"name":"Love","link":"https://apps.facebook.com/mylovers/"}]'
         });
       },
 
@@ -48,9 +48,9 @@ var Lovers = {};
           "link": "https://apps.facebook.com/mylovers/",
           "picture": this.host + giftSource,
           "name": giftName,
-          "caption": "Happy Valentine's Day!",
-          "description": "Wishing you a sweet & loving Valentine's Day.",
-          "actions": '[{"name":"Love","link":"http://apps.facebook.com/mylovers/"}]'
+          "caption": "A gift filled with lots of love.",
+          "description": "Wishing you a sweet & loving day!",
+          "actions": '[{"name":"Love","link":"https://apps.facebook.com/mylovers/"}]'
         });
       },
 

@@ -9,10 +9,11 @@ module Lovers
     # 16: heart cookie w love written on it with icing
     # 1000: call me candy heart
     # 10 credits = $1
+    DESC = "A gift filled with lots of love." # "Happy Valentine's Day!"
     GIFTS = [
       { # 0 # cannot be sold through FB credits because it's free
         title: "Red Heart",
-        # description: "Happy Valentine's Day!",
+        description: DESC,
         price: 0,
         image_url: "#{Lovers.host}/images/gifts/red-heart.png",
         product_url: "#{Lovers.host}/images/gifts/red-heart.png"
@@ -20,21 +21,21 @@ module Lovers
       },
       { # 1
         title: "Red Rose",
-        # description: "Happy Valentine's Day!",
+        description: DESC,
         price: 10,
         image_url: "#{Lovers.host}/images/gifts/red-rose.png",
         product_url: "#{Lovers.host}/images/gifts/red-rose.png"
       },
       { # 2
         title: "One-Dozen Red Roses",
-        # description: "Happy Valentine's Day!",
+        description: DESC,
         price: 99,
         image_url: "#{Lovers.host}/images/gifts/dozen-red-roses.png",
         product_url: "#{Lovers.host}/images/gifts/dozen-red-roses.png"
       },
       { # 3
         title: "Blue Diamond",
-        # description: "Happy Valentine's Day!",
+        description: DESC,
         price: 3304,
         image_url: "#{Lovers.host}/images/gifts/blue-diamond.png",
         product_url: "#{Lovers.host}/images/gifts/blue-diamond.png"
