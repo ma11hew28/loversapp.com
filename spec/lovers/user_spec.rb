@@ -16,6 +16,32 @@ module Lovers
   describe User do
     let(:user) { User.new("1") }
 
+    describe "#save" do
+      it 'adds itself to the "users" set' do
+        user.save
+        Lovers.redis.sismember("users", user.facebook.id).should be_true
+      end
+
+      it 'removes itself from the "alums" set' do
+        Lovers.redis.sadd("alums", user.facebook.id)
+        user.save
+        Lovers.redis.sismember("alums", user.facebook.id).should be_false
+      end
+    end
+
+    describe "#delete" do
+      it 'removes itself from the "users" set' do
+        Lovers.redis.sadd("users", user.facebook.id)
+        user.delete
+        Lovers.redis.sismember("users", user.facebook.id).should be_false
+      end
+
+      it 'adds itself to the "alums" set' do
+        user.delete
+        Lovers.redis.sismember("alums", user.facebook.id).should be_true
+      end
+    end
+
     describe "#calculate_points" do
       it "calculates a user's points" do
         user.should_receive(:calculate_proactive_points).and_return(100)
