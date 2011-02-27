@@ -36,3 +36,18 @@ end
 Then /^I should get a Facebook::AuthenticationError$/ do
   @error_class.should equal(Facebook::AuthenticationError)
 end
+
+# apprequests
+
+Given /^I'm logged in$/ do
+  @user = Facebook::User.new(Facebook::Test::APP_USER[:user_id],
+    Facebook::Test::APP_USER[:access_token])
+end
+
+When /^I view my apprequests$/ do
+  @apprequests = @user.apprequests
+end
+
+Then /^I should see "(\d+)" apprequests$/ do |reqs|
+  @apprequests.should have(Integer(reqs)).apprequests
+end

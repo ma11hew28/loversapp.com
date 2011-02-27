@@ -85,10 +85,6 @@ module Lovers
       return rel.delete ? "1" : "0"
     end
 
-    def requests
-      @requests ||= facebook.get("apprequests")
-    end
-
     def relationships
       Lovers.redis.zrange("#{facebook.id}:#{Relationship::RELS}", 0, -1)
     end
@@ -109,8 +105,19 @@ module Lovers
       received_gifts.sum_odds
     end
 
+    def self.calculate_points_once
+      return unless new("514417").points.zero?
+      Lovers.users.map do |i|
+        Lovers::User.new(i).tap do |u|
+          u.calculate_points
+          u.save_points
+        end
+      end
+    end
+
     def points
-      @points ||= proactive_points + attracted_points
+      @points ||= \
+        Integer(Lovers.redis.zscore("points", facebook.id) || "0")
     end
 
     def proactive_points
@@ -125,8 +132,6 @@ module Lovers
 
     def calculate_points
       @points = calculate_proactive_points + calculate_attracted_points
-      # points = sent_gifts.sum_points + received_gifts.sum_points
-      # Lovers.redis.zadd("attractedPoints", points, facebook.id)
     end
 
     def calculate_proactive_points
@@ -134,11 +139,15 @@ module Lovers
     end
 
     def calculate_attracted_points
-      @attracted_points = sent_gifts.sum_points
+      @attracted_points = received_gifts.sum_points
     end
 
     def save_points
-      Lovers.redis.zadd("points", @points, facebook.id)
+      unless @points.zero?
+        Lovers.redis.zadd("points", @points, facebook.id)
+        save_proactive_points
+        save_attracted_points
+      end
     end
 
     def save_proactive_points

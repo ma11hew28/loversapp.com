@@ -100,8 +100,9 @@ Then /^I should have "(\d*)" sent gifts$/ do |sent|
 end
 
 Given /^the following users exist:$/ do |table|
+  @users = []
   table.hashes.each do |u|
-    Lovers::User.new(u[:uid]).save
+    @users << Lovers::User.new(u[:uid]).tap { |u| u.save }
   end
 end
 
@@ -140,21 +141,25 @@ Given /^the following gifts have been sent:$/ do |table|
 end
 
 When /^the points are calculated & saved for each user$/ do
-  # # This would be nice.
-  # Lovers.users.each do |u|
+  Lovers::User.calculate_points_once
+  # @users.each do |u|
   #   u.calculate_points
   #   u.save_points
   # end
-  @users = Lovers.users.map do |i|
-    Lovers::User.new(i).tap do |u|
-      u.calculate_points
-      u.save_points
-    end
-  end
 end
 
 Then /^the points should be:$/ do |table|
   table.hashes.each do |u|
-    Lovers::User.new(u[:uid]).points.should equal(Integer(u[:pts]))
+    # Check points from object.
+    user = @users.find { |usr| usr.facebook.id == u[:uid] }
+    user.points.should equal(Integer(u[:pts]))
+    user.proactive_points.should equal(Integer(u[:pro]))
+    user.attracted_points.should equal(Integer(u[:atr]))
+
+    # Check points from database.
+    user = Lovers::User.new(u[:uid])
+    user.points.should equal(Integer(u[:pts]))
+    user.proactive_points.should equal(Integer(u[:pro]))
+    user.attracted_points.should equal(Integer(u[:atr]))
   end
 end

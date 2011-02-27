@@ -24,7 +24,6 @@ module Lovers
       end
     end
 
-
     describe "#calculate_proactive_points" do
       it "calculates a user's proactive points" do
         sent_gifts = double("sent_gifts_array")

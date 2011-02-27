@@ -1,4 +1,3 @@
-@wip
 Feature: user sends gifts to friends
 
   As a user
@@ -40,11 +39,15 @@ Feature: user sends gifts to friends
     Given the following gifts have been sent:
       | uid | gid | tid |
       | 1   | 0   | 2   |
-      # | 1   | 1   | 2   |
-      # | 1   | 2   | 2   |
-      # | 1   | 3   | 2   |
+      | 1   | 1   | 2   |
+      | 1   | 2   | 2   |
+      | 1   | 3   | 2   |
+      | 3   | 1   | 4   |
+      | 4   | 2   | 3   |
     When the points are calculated & saved for each user
     Then the points should be:
-      | uid | pts |
-      | 1   | 1   |
-      | 2   | 1   |
+      | uid | pts  | pro  | atr  |
+      | 1   | 3417 | 3417 | 0    |
+      | 2   | 3417 | 0    | 3417 |
+      | 3   | 122  | 22   | 100  |
+      | 4   | 122  | 100  | 22   |

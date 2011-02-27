@@ -1,5 +1,6 @@
-require 'openssl' # decode Facebook signed_request via HMAC-SHA256
-require 'json'    # parse JSON signed_request & API responses
+require 'net/http'  # make public & secure requests to Facebook Graph API
+require 'net/https' # decode Facebook signed_request via HMAC-SHA256
+require 'json'      # parse JSON signed_request & API responses
 
 require 'facebook/errors'
 require 'facebook/user'
@@ -9,10 +10,25 @@ class Facebook
   @@app_root = "https://apps.facebook.com"
 
   def self.api(path, params={}, method="GET")
-    params[:method] = method
-    GRAPH_DOMAIN + path
+    path += "?#{encode_params(params)}" unless params.empty?
+    JSON.parse((params[:access_token] ? https : http).get(path).body)["data"]
   end
   class << self; alias_method :get, :api; end # works, but is there better way?
+
+  def self.http
+    @http ||= Net::HTTP.new(GRAPH_DOMAIN)
+  end
+
+  def self.https
+    @https ||= Net::HTTP.new(GRAPH_DOMAIN, 443).tap do |h|
+      h.use_ssl = true
+      # we turn off certificate validation to avoid the "warning: peer
+      # certificate won't be verified in this SSL session" warning not sure if
+      # this is the right way to handle it see
+      # http://redcorundum.blogspot.com/2008/03/ssl-certificates-and-nethttps.html
+      h.verify_mode = OpenSSL::SSL::VERIFY_NONE
+    end
+  end
 
   attr_reader :id, :canvas_page, :canvas_url
   # http://developers.facebook.com/docs/api => App Login

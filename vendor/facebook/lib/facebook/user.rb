@@ -7,9 +7,15 @@ class Facebook
       @access_token = access_token
     end
 
-    def api(suffix, params={}, method="GET")
-      params[:access_token] = @access_token
-      Facebook.get("/#{id}/#{suffix}", params, method)
+    def apprequests
+      @apprequests ||= get("apprequests")
+    end
+    alias_method :requests, :apprequests
+
+    def api(suffix="", params={}, method="GET")
+      path = "/#{id}"; path << "/#{suffix}" unless suffix.empty?
+      params[:access_token] = @access_token if @access_token
+      Facebook.api(path, params, method)
     end
     alias_method :get, :api
   end
