@@ -5,7 +5,7 @@
   <title>Lovers on Facebook</title>
   <link rel="shortcut icon" href="/favicon.ico">
   <link rel="stylesheet" href="<%= versioned_stylesheet("screen") %>">
-  <script src="/javascripts/create-html5-elements.js"></script>
+  <script src="/javascripts/html5-ie.js"></script>
   <script src="/javascripts/jquery.min.js"></script>
   <% unless @class == "login" %>
     <link rel="stylesheet" href="/stylesheets/ui-lightness/jquery-ui.css">
@@ -30,9 +30,10 @@
   <footer>
     <p>Lovers © 2011</p>
     <ul>
-      <li><a href="/about">About</a></li>
+      <%= '<li><a href="/fb/canvas/admin">Admin</a></li>' if @user && @user.admin? %>
+      <li><a href="/fb/canvas/about">About</a></li>
       <li><a href="https://www.facebook.com/settings/?tab=applications" target="_top">Settings</a></li>
-      <li><a href="/privacy">Privacy</a></li>
+      <li><a href="/fb/canvas/privacy">Privacy</a></li>
     </ul>
   </footer>
 

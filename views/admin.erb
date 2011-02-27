@@ -1,26 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>Lovers on Facebook</title>
-</head>
-<body>
-  <h1>Lovers Administration</h1>
+  <!-- <h2>Lovers Administration</h2> -->
 
-  <h2>Users</h2>
+  <h3>Users</h3>
+  <p>Total: <%= @user_count %></p>
   <ol>
     <% @users.each do |u| %>
       <li><%= u %></li>
     <% end %>
   </ol>
 
-  <h2>Alums (users who've removed this app)</h2>
+  <h3>Alums (users who've removed this app)</h3>
   <ol>
     <% @alums.each do |u| %>
       <li><%= u %></li>
     <% end %>
   </ol>
-
-  <%= erb :ga, layout: false %>
-</body>
-</html>

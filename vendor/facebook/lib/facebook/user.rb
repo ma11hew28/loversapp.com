@@ -3,7 +3,7 @@ class Facebook
     attr_reader :id, :access_token
 
     def initialize(id, access_token=nil)
-      Integer(@id = id)
+      Integer(@id = id.to_s)
       @access_token = access_token
     end
 

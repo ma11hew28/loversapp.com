@@ -14,6 +14,8 @@ end
 
 module Lovers
   class User
+    @@admin_uids = Conf.admin_uids; def self.admins; @@admin_uids; end
+
     attr_reader :facebook # account
     # attr_reader :twitter # TODO: tweet love
 
@@ -44,12 +46,26 @@ module Lovers
       User.new(*args).tap { |u| u.save unless u.facebook.nil? }
     end
 
+    def self.count
+      Lovers.redis.scard("users")
+    end
+
     def self.all
       Lovers.redis.smembers("users") # don't memoize, dynamic across requests
     end
 
     def self.alums
       Lovers.redis.smembers("alums")
+    end
+
+    def self.paginate(options={})
+      per_page = options[:per_page] || 20
+      offset = [(options[:page] || 1) - 1, 0].max * per_page
+      Lovers.redis.sort("users", :limit => [offset, per_page])
+    end
+
+    def admin?
+      facebook && @@admin_uids.include?(facebook.id)
     end
 
     def save
@@ -114,7 +130,7 @@ module Lovers
     end
 
     def self.calculate_points_once
-      return unless new("514417").points.zero?
+      return unless new(User.admins[1]).points.zero?
       User.all.map do |i|
         User.new(i).tap do |u|
           u.calculate_points

@@ -16,6 +16,35 @@ module Lovers
   describe User do
     let(:user) { User.new("1") }
 
+    describe "::count" do
+      it "returns the count of users in the database" do
+        1.upto(3) { |u| User.create(u) }
+        User.count.should equal(3)
+      end
+    end
+
+    describe "::paginate" do
+      before(:each) { 1.upto(100) { |u| User.create(u) } }
+
+      it "defaults to 20 per-page, sorted ASC (from smallest to largest)" do
+        User.paginate.should eql(("1".."20").to_a)
+      end
+
+      it "takes a page option" do
+        User.paginate(page: 3).should eql(("41".."60").to_a)
+      end
+
+      it "takes a per_page option" do
+        User.paginate(per_page: 3).should eql(("1".."3").to_a)
+      end
+    end
+
+    describe "#admin?" do
+      it "returns true if the user is an administrator" do
+        User.new(Conf.admin_uids[0]).admin?.should be_true
+      end
+    end
+
     describe "#save" do
       it 'adds itself to the "users" set' do
         user.save

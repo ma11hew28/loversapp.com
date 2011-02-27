@@ -6,3 +6,12 @@ task :build do
     file.puts RDiscount.new(File.read(File.join("views", "#{f}.md"))).to_html
   end
 end
+
+desc "Update heroku branch from master"
+task :commit do
+  system("git co master
+  git br -D heroku
+  git co -b heroku
+  git cherry-pick lovers_yml
+  git push staging heroku:master -f")
+end

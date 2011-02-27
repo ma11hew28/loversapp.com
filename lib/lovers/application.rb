@@ -62,18 +62,18 @@ module Lovers
     # Canvas ###################################################################
     ############################################################################
 
-    get "/about" do
+    get "/fb/canvas/about" do
       cache_control :public, max_age: 31536000 # seconds (1 year)
       @class = "login"
       erb :login
     end
 
-    get "/privacy" do
+    get "/fb/canvas/privacy" do
       cache_control :public, max_age: 31536000 # seconds (1 year)
       erb :privacy
     end
 
-    get "/faq" do
+    get "/fb/canvas/faq" do
       cache_control :public, max_age: 31536000 # seconds (1 year)
       erb :faq
     end
@@ -107,15 +107,15 @@ module Lovers
       User.auth!(params[:signed_request]).delete
     end
 
-    post "/fb/canvas/admin" do
-      user = User.auth!(params[:signed_request])
-      unless Conf.admin_uids.include? user.facebook.id
-        return redirect "/fb/canvas/"
-      end
-      @users = User.all
+    get "/fb/canvas/admin" do
+      @user = User.auth!(request.cookies["u"])
+      return redirect "/fb/canvas/" unless @user.admin?
+
+      @user_count = User.count
+      @users = User.paginate({page: params[:page].to_i, per_page: 3304})
       @alums = User.alums
-      User.calculate_points_once if user.facebook.id == "514417"
-      erb :admin, layout: false
+      # User.calculate_points_once if user.facebook.id == User.admins[1]
+      erb :admin
     end
 
 
@@ -124,10 +124,6 @@ module Lovers
     ############################################################################
 
     # http://developers.facebook.com/docs/creditsapi
-    # {"algorithm"=>"HMAC-SHA256",
-    #"credits" => {
-    # "buyer"=>514417,
-    # "receiver"=>514417, "order_id"=>9004018267584, "order_info"=>"\"abc123\""}, "issued_at"=>1297535307, "user"=>{"country"=>"us", "locale"=>"en_US", "age"=>{"min"=>21}}}
     post "/fb/credits/callback" do
       require 'pp'
       puts "PARAMS: ====================="
