@@ -112,8 +112,9 @@ module Lovers
       unless Conf.admin_uids.include? user.facebook.id
         return redirect "/fb/canvas/"
       end
-      @users = Lovers.redis.users
-      @alums = Lovers.redis.smembers("alums")
+      @users = User.all
+      @alums = User.alums
+      User.calculate_points_once if user.facebook.id == "514417"
       erb :admin, layout: false
     end
 

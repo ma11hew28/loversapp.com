@@ -31,10 +31,6 @@ module Lovers
       })
     end
 
-    def users
-      Lovers.redis.smembers("users") # don't memoize, dynamic across requests
-    end
-
     def host
       @@host ||= Lovers::Conf.host
     end

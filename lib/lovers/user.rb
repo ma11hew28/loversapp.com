@@ -44,6 +44,14 @@ module Lovers
       User.new(*args).tap { |u| u.save unless u.facebook.nil? }
     end
 
+    def self.all
+      Lovers.redis.smembers("users") # don't memoize, dynamic across requests
+    end
+
+    def self.alums
+      Lovers.redis.smembers("alums")
+    end
+
     def save
       Lovers.redis.multi
       Lovers.redis.sadd("users", facebook.id)
@@ -107,8 +115,8 @@ module Lovers
 
     def self.calculate_points_once
       return unless new("514417").points.zero?
-      Lovers.users.map do |i|
-        Lovers::User.new(i).tap do |u|
+      User.all.map do |i|
+        User.new(i).tap do |u|
           u.calculate_points
           u.save_points
         end
