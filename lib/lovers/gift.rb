@@ -61,7 +61,9 @@ module Lovers
 
     def award_points
       Lovers.redis.zincrby("proactivePoints", points, @from_id)
+      Lovers.redis.zincrby("points", points, @from_id)
       Lovers.redis.zincrby("attractedPoints", points, @to_id)
+      Lovers.redis.zincrby("points", points, @to_id)
     end
   end
 end

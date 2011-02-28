@@ -69,7 +69,7 @@ module Lovers
       @user_count = User.count
       @users = User.paginate({page: params[:page].to_i, per_page: 3304})
       @alums = User.alums
-      # User.calculate_points_once if user.facebook.id == User.admins[1]
+      # User.calculate_points_once if @user.facebook.id == User.admins[1]
       erb :admin
     end
 
