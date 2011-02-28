@@ -19,11 +19,12 @@ module Lovers
     attr_reader :facebook # account
     # attr_reader :twitter # TODO: tweet love
 
-    def initialize(facebook_user_id, facebook_access_token=nil)
-      @facebook = Facebook::User.new(facebook_user_id, facebook_access_token)
-    rescue TypeError # user_id is nil, i.e., user is not yet an app user
-    rescue ArgumentError => e # suspicious user_id
-      Lovers.logger.error e.inspect
+    def initialize(facebook_user_id=nil, facebook_access_token=nil)
+      if facebook_user_id
+        @facebook = Facebook::User.new(facebook_user_id, facebook_access_token)
+      end
+    rescue ArgumentError => e
+      Lovers.logger.error e.inspect # suspicious facebook_user_id
     end
 
     # Authenticate the user from a signed_request.
@@ -35,11 +36,11 @@ module Lovers
       raise AuthenticationError.new e.message
     end
 
-    def self.auth(*args)
-      auth!(*args)
+    def self.auth(signed_request)
+      auth!(signed_request)
     rescue AuthenticationError => e
       Lovers.logger.error e.inspect
-      nil
+      User.new
     end
 
     def self.create(*args)
@@ -56,6 +57,18 @@ module Lovers
 
     def self.alums
       Lovers.redis.smembers("alums")
+    end
+
+    def self.top_lovers
+      Lovers.redis.zrevrange("points", 0, 9, with_scores: true)
+    end
+
+    def self.most_loving
+      Lovers.redis.zrevrange("proactivePoints", 0, 9, with_scores: true)
+    end
+
+    def self.most_loved
+      Lovers.redis.zrevrange("attractedPoints", 0, 9, with_scores: true)
     end
 
     def self.paginate(options={})

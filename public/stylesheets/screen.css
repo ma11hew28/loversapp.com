@@ -161,3 +161,11 @@ input#friend-selector {
 #send-gift a.uiButtonConfirm {
   margin-left: 400px;
 }
+
+#leader-board {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 220px;
+}

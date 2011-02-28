@@ -161,6 +161,13 @@ var Lovers = {};
             }
           });
         });
+
+        $.get('/fb/canvas/leaders', function(leaders) {
+          // leaders.top_lovers
+          // leaders.most_loving
+          // leaders.most_loved
+          console.log(leaders);
+        });
       }
     }
   });

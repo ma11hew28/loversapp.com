@@ -39,6 +39,34 @@ module Lovers
       end
     end
 
+    context "leader board" do
+      leaders = ("1".."20").to_a
+
+      describe "::top_lovers" do
+        it "returns the top-ten users by points" do
+          Lovers.redis.should_receive(:zrevrange).
+            with("points", 0, 9, with_scores: true) { leaders }
+          User.top_lovers.should equal(leaders)
+        end
+      end
+
+      describe "::most_loving" do
+        it "returns the top-ten users by points" do
+          Lovers.redis.should_receive(:zrevrange).
+            with("proactivePoints", 0, 9, with_scores: true) { leaders }
+          User.most_loving.should equal(leaders)
+        end
+      end
+
+      describe "::most_loved" do
+        it "returns the top-ten users by points" do
+          Lovers.redis.should_receive(:zrevrange).
+            with("attractedPoints", 0, 9, with_scores: true) { leaders }
+          User.most_loved.should equal(leaders)
+        end
+      end
+    end
+
     describe "#admin?" do
       it "returns true if the user is an administrator" do
         User.new(Conf.admin_uids[0]).admin?.should be_true

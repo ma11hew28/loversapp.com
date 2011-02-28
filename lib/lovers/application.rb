@@ -62,6 +62,17 @@ module Lovers
     # Canvas ###################################################################
     ############################################################################
 
+    get "/fb/canvas/admin" do
+      @user = User.auth!(request.cookies["u"])
+      return redirect "/fb/canvas/" unless @user.admin?
+
+      @user_count = User.count
+      @users = User.paginate({page: params[:page].to_i, per_page: 3304})
+      @alums = User.alums
+      # User.calculate_points_once if user.facebook.id == User.admins[1]
+      erb :admin
+    end
+
     get "/fb/canvas/about" do
       cache_control :public, max_age: 31536000 # seconds (1 year)
       @class = "login"
@@ -76,6 +87,14 @@ module Lovers
     get "/fb/canvas/faq" do
       cache_control :public, max_age: 31536000 # seconds (1 year)
       erb :faq
+    end
+
+    get "/fb/canvas/leaders" do
+      content_type "application/json"
+      @user = User.auth!(request.cookies["u"])
+      {top_lovers:  User.top_lovers,
+       most_loving: User.most_loving,
+       most_loved: User.most_loved}.to_json
     end
 
     # Initial Facebook request comes in as a POST with a signed_request.
@@ -105,17 +124,6 @@ module Lovers
 
     post "/fb/deauth" do
       User.auth!(params[:signed_request]).delete
-    end
-
-    get "/fb/canvas/admin" do
-      @user = User.auth!(request.cookies["u"])
-      return redirect "/fb/canvas/" unless @user.admin?
-
-      @user_count = User.count
-      @users = User.paginate({page: params[:page].to_i, per_page: 3304})
-      @alums = User.alums
-      # User.calculate_points_once if user.facebook.id == User.admins[1]
-      erb :admin
     end
 
 
