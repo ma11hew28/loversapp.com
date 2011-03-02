@@ -62,6 +62,15 @@ module Lovers
     # Canvas ###################################################################
     ############################################################################
 
+    # # for testing purposes
+    # get "/fb/canvas/test" do
+    #   @user = User.new(User.admins[1])
+    #   @class = "canvas"
+    #   erb :canvas
+    #   # @class = "login"
+    #   # erb :login
+    # end
+
     get "/fb/canvas/admin" do
       @user = User.auth!(request.cookies["u"])
       return redirect "/fb/canvas/" unless @user.admin?

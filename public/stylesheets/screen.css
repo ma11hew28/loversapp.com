@@ -144,6 +144,10 @@ input#friend-selector {
   color: white;
 }
 
+#send-gift {
+  height: 400px;
+}
+
 #send-gift ul {
   padding-left: 20px;
   list-style-type: none;
@@ -163,9 +167,9 @@ input#friend-selector {
 }
 
 #leader-board {
-  display: none;
+  font-size: 10px;
   position: absolute;
   right: 0;
   top: 0;
-  width: 220px;
+  width: 210px;
 }

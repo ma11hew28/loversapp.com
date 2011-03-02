@@ -41,11 +41,11 @@ module Lovers
 
     context "leader board" do
       leaders = ("1".."20").to_a
-
+      stop = 12
       describe "::top_lovers" do
         it "returns the top-ten users by points" do
           Lovers.redis.should_receive(:zrevrange).
-            with("points", 0, 9, with_scores: true) { leaders }
+            with("points", 0, stop, with_scores: true) { leaders }
           User.top_lovers.should equal(leaders)
         end
       end
@@ -53,7 +53,7 @@ module Lovers
       describe "::most_loving" do
         it "returns the top-ten users by points" do
           Lovers.redis.should_receive(:zrevrange).
-            with("proactivePoints", 0, 9, with_scores: true) { leaders }
+            with("proactivePoints", 0, stop, with_scores: true) { leaders }
           User.most_loving.should equal(leaders)
         end
       end
@@ -61,7 +61,7 @@ module Lovers
       describe "::most_loved" do
         it "returns the top-ten users by points" do
           Lovers.redis.should_receive(:zrevrange).
-            with("attractedPoints", 0, 9, with_scores: true) { leaders }
+            with("attractedPoints", 0, stop, with_scores: true) { leaders }
           User.most_loved.should equal(leaders)
         end
       end

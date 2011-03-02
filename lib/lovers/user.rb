@@ -60,15 +60,15 @@ module Lovers
     end
 
     def self.top_lovers
-      Lovers.redis.zrevrange("points", 0, 9, with_scores: true)
+      Lovers.redis.zrevrange("points", 0, 12, with_scores: true)
     end
 
     def self.most_loving
-      Lovers.redis.zrevrange("proactivePoints", 0, 9, with_scores: true)
+      Lovers.redis.zrevrange("proactivePoints", 0, 12, with_scores: true)
     end
 
     def self.most_loved
-      Lovers.redis.zrevrange("attractedPoints", 0, 9, with_scores: true)
+      Lovers.redis.zrevrange("attractedPoints", 0, 12, with_scores: true)
     end
 
     def self.paginate(options={})
