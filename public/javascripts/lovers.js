@@ -169,62 +169,62 @@ var Lovers = {};
           });
         });
 
-        $.get('/fb/canvas/leaders', function(leaders) {
-          // var leaders = {
-          //   "top_lovers"  : ["514417","10","1396103677","9","6","8","34","7","54","6","353","5","532","4","35354","3","65563","2","767762","1","676674","5","34564","5"],
-          //   "most_loving" : ["514417","10","1396103677","9","6","8","34","7","54","6","353","5","532","4","35354","3","65563","2","767762","1","676674","5","34564","5"],
-          //   "most_loved"  : ["514417","10","1396103677","9","6","8","34","7","54","6","353","5","532","4","35354","3","65563","2","767762","1","676674","5","34564","5"]
-          // };
-
-          // Get all ids_pts from three leader groups
-          var grp, i, len, ids_pts = [], ids = [];
-          // var top_lovers, most_loving, most_loved;
-          for (grp in leaders) {
-            ids_pts = ids_pts.concat(leaders[grp]);
-          }
-
-          // Get ids from ids_pts.
-          len = ids_pts.length;
-          for (i=0; i<len; i+=2) ids.push(ids_pts[i]);
-
-          // Ensure ids are unique
-          var o = {}, i, len = ids.length;
-          for (i=0; i<len; ++i) o[ids[i]] = ids[i];
-          ids = []; for (i in o) ids.push(o[i]);
-
-          // Get names from ids.
-          FB.api("?ids=" + ids.join(",") + "&fields=name&access_token=" +
-              Lovers.user.facebook.access_token, function(response) {
-
-            // Render user links with names for each leader group.
-            var html = "", usr, uid, name, pts;
-            var base = "https://www.facebook.com/profile.php?id=";
-
-            for (grp in leaders) {
-              ids_pts = leaders[grp], html = ""; // reset html
-              var j = 0; len = ids_pts.length;
-              for(i=0; i<len && j<10; i+=2) { // print max of 10
-                uid = ids_pts[i], pts = ids_pts[i+1];
-                if (uid === "514417" || uid === "1396103677" ||
-                    uid === "100002034432525") continue; // skip me, mom & sara
-
-                // Get user's name by uid.
-                name = ""; // reset name
-                for (usr in response) {
-                  var u = response[usr];
-                  if (u["id"] === uid) {
-                    name = u["name"];
-                    break;
-                  }
-                }
-
-                html += '<li><a href="' + base + uid + '" target="_top">' +
-                    name + "</a> (" + pts + ")</li>"; ++j;
-              }
-              $("#"+grp.replace("_", "-")).html(html);
-            }
-          });
-        });
+        // $.get('/fb/canvas/leaders', function(leaders) {
+        //   // var leaders = {
+        //   //   "top_lovers"  : ["514417","10","1396103677","9","6","8","34","7","54","6","353","5","532","4","35354","3","65563","2","767762","1","676674","5","34564","5"],
+        //   //   "most_loving" : ["514417","10","1396103677","9","6","8","34","7","54","6","353","5","532","4","35354","3","65563","2","767762","1","676674","5","34564","5"],
+        //   //   "most_loved"  : ["514417","10","1396103677","9","6","8","34","7","54","6","353","5","532","4","35354","3","65563","2","767762","1","676674","5","34564","5"]
+        //   // };
+        // 
+        //   // Get all ids_pts from three leader groups
+        //   var grp, i, len, ids_pts = [], ids = [];
+        //   // var top_lovers, most_loving, most_loved;
+        //   for (grp in leaders) {
+        //     ids_pts = ids_pts.concat(leaders[grp]);
+        //   }
+        // 
+        //   // Get ids from ids_pts.
+        //   len = ids_pts.length;
+        //   for (i=0; i<len; i+=2) ids.push(ids_pts[i]);
+        // 
+        //   // Ensure ids are unique
+        //   var o = {}, i, len = ids.length;
+        //   for (i=0; i<len; ++i) o[ids[i]] = ids[i];
+        //   ids = []; for (i in o) ids.push(o[i]);
+        // 
+        //   // Get names from ids.
+        //   FB.api("?ids=" + ids.join(",") + "&fields=name&access_token=" +
+        //       Lovers.user.facebook.access_token, function(response) {
+        // 
+        //     // Render user links with names for each leader group.
+        //     var html = "", usr, uid, name, pts;
+        //     var base = "https://www.facebook.com/profile.php?id=";
+        // 
+        //     for (grp in leaders) {
+        //       ids_pts = leaders[grp], html = ""; // reset html
+        //       var j = 0; len = ids_pts.length;
+        //       for(i=0; i<len && j<10; i+=2) { // print max of 10
+        //         uid = ids_pts[i], pts = ids_pts[i+1];
+        //         if (uid === "514417" || uid === "1396103677" ||
+        //             uid === "100002034432525") continue; // skip me, mom & sara
+        // 
+        //         // Get user's name by uid.
+        //         name = ""; // reset name
+        //         for (usr in response) {
+        //           var u = response[usr];
+        //           if (u["id"] === uid) {
+        //             name = u["name"];
+        //             break;
+        //           }
+        //         }
+        // 
+        //         html += '<li><a href="' + base + uid + '" target="_top">' +
+        //             name + "</a> (" + pts + ")</li>"; ++j;
+        //       }
+        //       $("#"+grp.replace("_", "-")).html(html);
+        //     }
+        //   });
+        // });
       }
     }
   });

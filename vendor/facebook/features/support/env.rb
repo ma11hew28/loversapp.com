@@ -4,7 +4,7 @@ require 'bundler'
 Bundler.setup(:default, :cucumber)
 
 require 'artifice'
-require 'ruby-debug'
+# require 'ruby-debug'
 
 $LOAD_PATH << File.expand_path(File.join(
   File.dirname(__FILE__), "..", "..", "lib"))

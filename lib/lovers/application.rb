@@ -18,9 +18,9 @@ module Lovers
     require 'logger'
     Lovers.logger = Logger.new(STDOUT)
 
-    configure :development do
-      require 'ruby-debug'
-    end
+    # configure :development do
+    #   require 'ruby-debug'
+    # end
 
     before "/fb/canvas/r*" do
       content_type "application/json"
@@ -71,16 +71,16 @@ module Lovers
     #   # erb :login
     # end
 
-    get "/fb/canvas/admin" do
-      @user = User.auth!(request.cookies["u"])
-      return redirect "/fb/canvas/" unless @user.admin?
-
-      @user_count = User.count
-      @users = User.paginate({page: params[:page].to_i, per_page: 3304})
-      @alums = User.alums
-      # User.calculate_points_once if @user.facebook.id == User.admins[1]
-      erb :admin
-    end
+    # get "/fb/canvas/admin" do
+    #   @user = User.auth!(request.cookies["u"])
+    #   return redirect "/fb/canvas/" unless @user.admin?
+    # 
+    #   @user_count = User.count
+    #   @users = User.paginate({page: params[:page].to_i, per_page: 3304})
+    #   @alums = User.alums
+    #   # User.calculate_points_once if @user.facebook.id == User.admins[1]
+    #   erb :admin
+    # end
 
     get "/fb/canvas/about" do
       cache_control :public, max_age: 31536000 # seconds (1 year)
@@ -98,13 +98,13 @@ module Lovers
       erb :faq
     end
 
-    get "/fb/canvas/leaders" do
-      content_type "application/json"
-      @user = User.auth!(request.cookies["u"])
-      {top_lovers:  User.top_lovers,
-       most_loving: User.most_loving,
-       most_loved: User.most_loved}.to_json
-    end
+    # get "/fb/canvas/leaders" do
+    #   content_type "application/json"
+    #   @user = User.auth!(request.cookies["u"])
+    #   {top_lovers:  User.top_lovers,
+    #    most_loving: User.most_loving,
+    #    most_loved: User.most_loved}.to_json
+    # end
 
     # Initial Facebook request comes in as a POST with a signed_request.
     post "/fb/canvas/" do
@@ -196,26 +196,26 @@ module Lovers
     # - Show all posts
 
 
-    ############################################################################
-    # Relationships ############################################################
-    ############################################################################
-
-    # GET (show) all relationships for a user.
-    get "/fb/canvas/relationships" do
-      @user.relationships.to_s
-    end
-
-    # POST (confirm/add) a relationship between two users.
-    post "/fb/canvas/relationship" do
-      @user.accept_requests(validate_request_id_user_id(
-        params[:rid], params[:uid]))
-    end
-
-    # DELETE (break up) a relationship.
-    delete "/fb/canvas/relationship" do
-      @user.remove_relationship(
-        validate_request_id_user_id(params[:rid], params[:uid]))
-    end
+    # ############################################################################
+    # # Relationships ############################################################
+    # ############################################################################
+    # 
+    # # GET (show) all relationships for a user.
+    # get "/fb/canvas/relationships" do
+    #   @user.relationships.to_s
+    # end
+    # 
+    # # POST (confirm/add) a relationship between two users.
+    # post "/fb/canvas/relationship" do
+    #   @user.accept_requests(validate_request_id_user_id(
+    #     params[:rid], params[:uid]))
+    # end
+    # 
+    # # DELETE (break up) a relationship.
+    # delete "/fb/canvas/relationship" do
+    #   @user.remove_relationship(
+    #     validate_request_id_user_id(params[:rid], params[:uid]))
+    # end
 
 
     ############################################################################
@@ -247,22 +247,5 @@ module Lovers
     def file_mtime(dir, file)
       File.mtime(File.join(Lovers.root, 'public', dir, file))
     end
-    # @staticmethod
-    # def base64_url_encode(data):
-    #     return base64.urlsafe_b64encode(data).rstrip("=")
-
-
-    # Cool projects
-    # mechanical turk
-    # patch
-    # locomotive
-    # omniauth
-    # mjording
-    # nyc-ruby-meetup
-
-    # Specs: It should:
-    # Redis
-
-    # Questions
   end
 end
