@@ -1,6 +1,6 @@
 ENV["RACK_ENV"] = "cucumber"
 
-require 'bundler'
+require 'bundler/setup'
 Bundler.setup(:default, :cucumber)
 
 require 'artifice'
