@@ -5,14 +5,14 @@ Lovers 2.0:
 
 	Spread the Love.
 	Send Love to friends. Add friends as lovers.
-	Launch on February 1, 2011.
-
-	The application is currently written in FBML & PHP. The goal is to rewrite the application with the Facebook JavaScript SDK (front end) and Ruby (Sinatra) & Redis (back end). We'll  host on AWS or Heroku with Redis To Go. We'll reuse and improve upon many of the already existing FBML, CSS, images (e.g., the logo), and content.
 
 	Team
-		Matt Di Pasquale - Lead Developer
-		Peng - Developer
-		Jacob - Developer
+		Marie Di Pasquale - Product Manager
+		Matt Di Pasquale - Software Engineer
+
+	Next:
+		- Migrate from Bamboo to Cedar.
+		- Add love action.
 
 	@improve: completed for Lovers 1.0 but should be updated & improved for 2.0
 
@@ -84,4 +84,3 @@ Lovers 2.0:
 		- On send:
 			- JS Graph feed post
 			- JS Credits API order post
-			- 	
