@@ -1,13 +1,9 @@
 Lovers:
-	Who do you love?
-
+	Share the love.
 	Next:
 		- Make Facebook its own gem.
 			- What to call vendor directory?
-		- Migrate from Bamboo to Cedar.
 		- Implement tunnler.
-		- Add love action.
-		- Improve favicons in /public
 
 		Company Site - LoversApp.com:
 			- Redirect to apps.facebook.com/mylovers
@@ -15,7 +11,6 @@ Lovers:
 
 	App Features:
 		AJAX Navigation:
-			- Look into using ember or meteor.
 			- The whole app should load initially; each tabbed page should be a <section>.
 		Monetization:
 			- Add LifeStreet Media ads.
