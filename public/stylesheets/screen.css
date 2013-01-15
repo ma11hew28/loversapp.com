@@ -1,175 +1,36 @@
-header, hgroup, footer, section, article, aside {
-  display: block;
-  overflow: hidden;
-}
-
 body {
-  margin: 0;
-  font-family: "lucida grande",tahoma,verdana,arial,sans-serif;
+  font-size: 11px;
+  font-family: 'lucida grande', tahoma, verdana, arial, sans-serif;
 }
 
-img {
-  border: none;
+h3 {
+  font-size: 18px;
+  font-weight: normal;
+  margin: 12px 0;
 }
 
-small {
-  font-size: 10px
+header > hgroup {
+  display: inline-block;
+  margin-left: 8px;
 }
 
-header img {
-  float: left;
+header > hgroup > h1 {
+  font-size: 32px;
+  margin: 6px 0;
 }
 
-header hgroup {
-  margin: 0 0 10px 64px;
-  padding-top: 10px;
+header > hgroup > h2 {
+  font-size: 24px;
+  font-weight: normal;
+  margin: 6px 0;
 }
 
-header h1, header h2 {
-  display: inline;
+section {
+  margin: 40px 0 0 300px;
 }
 
-header h1:after {
-  content: " : ";
-}
-
-.login div {
-  float: left;
-  width: 553px;
-}
-
-.login div ul li img + img {
-  position: absolute;
-}
-
-.login aside {
-  width: 200px;
-}
-
-.login aside > a {
-      background: url("http://static.ak.fbcdn.net/rsrc.php/zL/r/FGFbc80dUKj.png") no-repeat scroll 0 -59px #29447E;
-      display: block;
-      height: 39px;
-      margin-bottom: 16px;
-      padding: 1px 0 0 2px;
-      text-decoration: none;
-}
-
-.login aside a h3 {
-  background: url("http://static.ak.fbcdn.net/rsrc.php/zL/r/FGFbc80dUKj.png") repeat scroll 0 0 #5F78AB;
-  border-bottom: 1px solid #1A356E;
-  border-top: 1px solid #879AC0;
-  color: #FFFFFF;
-  font-family: "lucida grande",tahoma,verdana,arial,sans-serif;
+button {
+  cursor: pointer;
   font-weight: bold;
-  line-height: 36px;
-  margin: 1px 1px 0 38px;
-  text-align: center;
-}
-
-.login aside p {
-  font-size: 10px;
-}
-
-footer {
-  position: relative;
-  top: 10px;
-  clear: both;
-}
-
-footer p {
-  float: left;
-}
-
-footer a {
-  text-decoration: none;
-}
-
-footer ul {
-  float: right;
-  list-style-type: none;
-  width: 250px;
-}
-
-footer li {
-  float: left;
-  padding: 0 10px;
-}
-
-footer li + li {
-  border-left: solid 1px black;
-}
-
-
-/* Canvas Home */
-
-input#friend-selector {
-    float: left;
-    font-size: 15px;
-    margin-right: 10px;
-}
-
-.placeholder {
-  color: #777;
-}
-
-.mark {
-  font-style: italic;
-  color: orange;
-}
-
-.uiButton {
-    -moz-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
-    -webkit-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
-    background: url("http://static.ak.fbcdn.net/rsrc.php/zD/r/B4K_BWwP7P5.png") repeat scroll 0 0 #EEEEEE;
-    border-color: #999999 #999999 #888888;
-    border-style: solid;
-    border-width: 1px;
-    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
-    cursor: pointer;
-    display: inline-block;
-    font-weight: bold;
-    line-height: normal !important;
-    padding: 2px 6px;
-    text-align: center;
-    text-decoration: none;
-    vertical-align: top;
-    white-space: nowrap;
-}
-
-.uiButtonConfirm {
-  background-color: #5B74A8;
-  background-position: 0 -48px;
-  border-color: #29447E #29447E #1A356E;
-  color: white;
-}
-
-#send-gift {
-  height: 400px;
-}
-
-#send-gift ul {
-  padding-left: 20px;
-  list-style-type: none;
-  overflow: hidden;
-}
-
-#send-gift ul li {
-  float: left;
-}
-
-#send-gift ul li + li {
-  padding-left: 20px;
-}
-
-#send-gift a.uiButtonConfirm {
-  margin-left: 400px;
-}
-
-#leader-board {
-  font-size: 10px;
-  position: absolute;
-  right: 0;
-  top: 0;
-  width: 210px;
+  line-height: 20px;
 }
