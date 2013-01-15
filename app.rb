@@ -6,10 +6,16 @@ configure do
 end
 
 # Initial Facebook request comes in as a POST with a signed_request.
-post "/facebook/ " do
-  erb :index
+post '/facebook/' do
+  erb :'facebook/index'
 end
 
-post "/facebook/privacy" do
-  erb :privacy
+get '/facebook/privacy' do
+  erb :'facebook/privacy'
 end
+
+# get '/' do
+#   logger.info env
+#   # "hello"
+#   erb :'facebook/index'
+# end
