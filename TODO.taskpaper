@@ -1,86 +1,26 @@
-Lovers 2.0:
-	Page: http://www.facebook.com/loversapp
-	App: https://apps.facebook.com/mylovers/
-	Dev: https://apps.facebook.com/iloveyouall/
-
-	Spread the Love.
-	Send Love to friends. Add friends as lovers.
-
-	Team
-		Marie Di Pasquale - Product Manager
-		Matt Di Pasquale - Software Engineer
+Lovers:
+	Who do you love?
 
 	Next:
+		- Make Facebook its own gem.
+			- What to call vendor directory?
 		- Migrate from Bamboo to Cedar.
+		- Implement tunnler.
 		- Add love action.
-
-	@improve: completed for Lovers 1.0 but should be updated & improved for 2.0
-
-	Images:
 		- Improve favicons in /public
-		Gifts:
-			- 99Designs.com: roses - 1 for 10c, 12 for 99c.
-			- Resize blue diamond - 1 for 3,304c
 
-	Develop Team:
-		- Post details on Elance, NYU, Yale
-		- Email Harvard lists, Wires, and Ruby lists
-
-	Meta Pages:
-		About: @improve
-			- Add descriptions of new features and update screenshots
-		FAQ: @improve
-		Privacy Policy: @improve
-			- Address new, pertinent features: MongoDB storage, email collection, FB Credits, etc.
 		Company Site - LoversApp.com:
+			- Redirect to apps.facebook.com/mylovers
 			- Something like Google Chrome, TaskPaper, or Urtak's homepages
 
 	App Features:
-		Technology:
-			- MongoDB vs Redis? http://stackoverflow.com/questions/4637031/geospatial-indexing-with-redis-sinatra-for-a-facebook-app
-			- Copy Facebook's Sample App, Run with Friends: http://developers.facebook.com/docs/samples/canvas
-			- Sinatra:
-			- Backbone.js:
-				- http://documentcloud.github.com/backbone/
-				- http://documentcloud.github.com/backbone/docs/backbone.html
-				- http://documentcloud.github.com/backbone/docs/backbone-localstorage.html
-				- http://documentcloud.github.com/backbone/docs/todos.html
-			- Redis: 
-			- FB JavaScript SDK: http://developers.facebook.com/docs/reference/javascript/FB.api
 		AJAX Navigation:
+			- Look into using ember or meteor.
 			- The whole app should load initially; each tabbed page should be a <section>.
-		Profile Page: @improve
-			- Add Photo & links on left like normal profile
-			- Add box to show some lovers
-			- Just say "loves you." Don't repeat name.
-		Add Lovers: @improve
-			- Request & Approve model
-			- Add multiple friends as lovers with the different relationship statuses that Facebook offers
-			- Post newsfeed stories when people become lovers and when they breakup
-			- Email user on request & acceptance
-		Leaderboard:
-			- Top Lovers & Most Loved
-		Add a Valentine:
-			- Request & Approve model
-			- Add a friend as a Valentine: you can only have one
-			- Post newsfeed stories when people become Valentines
-			- Email user on request & acceptance
 		Monetization:
-			- Add options to send gift on send love form and when adding Valentines/Lovers
-				- Make gift graphics:
-					- 1, 6, 12 roses, red, yellow, white
-				- Facebook Credits? Gifts? API
+			- Add LifeStreet Media ads.
+			- Sell T-Shirts
 
 	Marketing:
-		- Post love to friends & families walls; add Lovers & Valentines
-		- Ask friends & family to post love to their friends walls & add Lovers & Valentines
-		- Hire people to send love & requests to their friends: $0.50/friend? Outsource it?
-
-	Send Gifts:
-		- Add credt logos to images
-		- Add front-end UI
-			- Friend selector
-			- Gifts to select one
-		- On send:
-			- JS Graph feed post
-			- JS Credits API order post
+		- Send love to friends & family members.
+		- Ask friends & family members to send love to their friends & family members.

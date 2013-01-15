@@ -1,13 +1,22 @@
-Lovers
-======
+# Lovers
 
-Share the love.
-Send Love to friends. Add friends as lovers.
+## Who do you love?
 
-The purpose of Lovers is to fill everyone with love.
+[Lovers][1] lets you send love to your friends.
 
-Even just a simple act of kindness, like a smile or posting "<3 [Your name] loves you" on your friend's wall can go a long way.
+Just use the typeahead to select a friend, tap "Love," and it will post, e.g., "Matt Di Pasquale loves Sara Hamilton."
 
-Send love to your friends!
+Even just a simple act of kindness, love, and gratitude can go a long way.
 
-The Lovers Team
+
+### Team
+
+* Matt Di Pasquale - Software Engineer
+
+### Links
+
+* Website: http://www.loversapp.com/
+* Old Page: http://www.facebook.com/loversapp
+* Staging: https://apps.facebook.com/iloveyouall/
+
+  [1]: https://apps.facebook.com/mylovers/
